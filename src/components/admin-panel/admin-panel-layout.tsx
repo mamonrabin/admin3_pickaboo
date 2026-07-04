@@ -4,6 +4,7 @@ import { cn } from "@/lib/utils";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { Sidebar } from "./sidebar";
 import { useSidebar } from "./sidebar-context";
+import Header from "./Header";
 
 
 const queryClient = new QueryClient();
@@ -24,7 +25,7 @@ export default function AdminPanelLayout({
           isOpen ? "lg:ml-64" : "ml-16",
         )}
       >
-        {/* <TopHead /> */}
+        <Header />
         <QueryClientProvider client={queryClient}>
           {children}
         </QueryClientProvider>

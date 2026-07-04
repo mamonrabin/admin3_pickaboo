@@ -16,7 +16,7 @@ export function Sidebar() {
   return (
     <aside
       className={cn(
-        "fixed top-0 left-0 z-20 bg-[#1C2C3F] h-screen border-r dark:bg-zinc-950 shadow-md transition-all duration-300",
+        "fixed md:block hidden top-0 left-0 z-20 bg-[#1C2C3F] h-screen border-r dark:bg-zinc-950 shadow-md transition-all duration-300",
         isOpen ? "w-64" : "w-20",
       )}
     >

@@ -11,7 +11,6 @@ import {
   Star,
 } from "lucide-react";
 
-
 export function getMenuList(pathname: string): TGroup[] {
   return [
     {
@@ -53,14 +52,27 @@ export function getMenuList(pathname: string): TGroup[] {
               label: "Subcategory",
               active: pathname === "/category/subcategory",
             },
+          ],
+        },
+        {
+          href: "/Size&Color",
+          label: "Size & Color",
+          active: pathname.includes("/Size&Color"),
+          icon: Shapes,
+          submenus: [
             {
-              href: "/category/childcategory",
-              label: "Childcategory",
-              active: pathname === "/category/childcategory",
+              href: "/Size&Color/size",
+              label: "Size",
+              active: pathname === "/Size&Color/size",
+            },
+            {
+              href: "/Size&Color/color",
+              label: "Color",
+              active: pathname === "/Size&Color/color",
             },
           ],
         },
-        
+
         {
           href: "/brand",
           label: "Brand",
