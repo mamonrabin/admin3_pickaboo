@@ -1,11 +1,21 @@
 "use client";
 
 import {
+  Control,
+  Controller,
   FieldError,
   FieldValues,
   Path,
-  UseFormRegister,
 } from "react-hook-form";
+
+import {
+  Select,
+  SelectContent,
+  SelectGroup,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 
 type Option = {
   label: string;
@@ -16,62 +26,70 @@ type SelectInputProps<T extends FieldValues> = {
   label: string;
   name: Path<T>;
   options: Option[];
-  register?: UseFormRegister<T>;
+  control: Control<T>;
   error?: FieldError;
-  value?: string;
-  onChange?: (e: React.ChangeEvent<HTMLSelectElement>) => void;
   required?: boolean;
   disabled?: boolean;
+  placeholder?: string;
   className?: string;
+  inputstyle?: string;
+  placeholderColor?: string;
 };
 
 const SelectInput = <T extends FieldValues>({
   label,
   name,
   options,
-  register,
+  control,
   error,
-  value,
-  onChange,
   required = false,
   disabled = false,
+  placeholder,
   className = "",
+  inputstyle = "",
+  placeholderColor = "",
 }: SelectInputProps<T>) => {
   return (
-    <div className={`flex flex-col gap-1 w-full ${className}`}>
-      <label htmlFor={name} className="text-sm font-medium">
+    <div className={`flex w-full flex-col gap-1 ${className}`}>
+      <label className="text-sm font-medium">
         {label}
         {required && <span className="text-red-500 ml-1">*</span>}
       </label>
 
-      <select
-        id={name}
-        disabled={disabled}
-        className={`px-4 py-2 border rounded text-sm outline-none ${
-          error ? "border-red-500" : "border-gray-300"
-        }`}
-        {...(register
-          ? register(name, {
-              required: required ? `${label} is required` : false,
-            })
-          : {
-              name,
-              value,
-              onChange,
-            })}
-      >
-        <option value="">Select {label}</option>
+      <Controller
+        name={name}
+        control={control}
+        rules={{
+          required: required ? `${label} is required` : false,
+        }}
+        render={({ field }) => (
+          <Select
+            value={field.value}
+            onValueChange={field.onChange}
+            disabled={disabled}
+          >
+            <SelectTrigger
+              className={`${inputstyle} ${
+                error ? "border-red-500" : "border-gray-300"
+              } data-[placeholder]:text-gray-500 ${placeholderColor}`} 
+            >
+              <SelectValue placeholder={placeholder ?? `Select ${label}`} />
+            </SelectTrigger>
 
-        {options.map((option) => (
-          <option key={option.value} value={option.value}>
-            {option.label}
-          </option>
-        ))}
-      </select>
+            <SelectContent>
+              <SelectGroup>
+                {options.map((option) => (
+                  <SelectItem key={option.value} value={option.value}>
+                    {option.label}
+                  </SelectItem>
+                ))}
+              </SelectGroup>
+            </SelectContent>
+          </Select>
+        )}
+      />
 
-      {error && (
-        <p className="text-sm text-red-500">{error.message}</p>
-      )}
+      {error && <p className="text-sm text-red-500">{error.message}</p>}
     </div>
   );
 };

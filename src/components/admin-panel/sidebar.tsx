@@ -17,7 +17,7 @@ export function Sidebar() {
     <aside
       className={cn(
         "fixed md:block hidden top-0 left-0 z-20 bg-[#1C2C3F] h-screen border-r dark:bg-zinc-950 shadow-md transition-all duration-300",
-        isOpen ? "w-64" : "w-20",
+        isOpen ? "w-64" : "md:w-20",
       )}
     >
       {/* HEADER AREA */}
@@ -34,6 +34,7 @@ export function Sidebar() {
                 width={500}
                 height={500}
                 className="w-32 h-auto mb-5"
+                priority
               />
             ) : (
               <Image

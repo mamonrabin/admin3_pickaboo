@@ -2,62 +2,40 @@
 
 import ImageUpload from "@/reuseble_components/ImageUpload";
 import InputField from "@/reuseble_components/InputField";
-import SelectInput from "@/reuseble_components/SelectInput";
-
 import { SubmitHandler, useForm } from "react-hook-form";
 
-type SubCategoryFormData = {
+type BrandFormData = {
   title: string;
-  category: string;
   image: FileList;
 };
 
-const CreateSubCategory = () => {
-
-  const categories = [
-    { label: "Electronics", value: "electronics" },
-    { label: "Fashion", value: "fashion" },
-    { label: "Books", value: "books" },
-  ];
-
+const Createbrand = () => {
   const {
     register,
     handleSubmit,
-     control,
     reset,
     formState: { errors },
-  } = useForm<SubCategoryFormData>();
+  } = useForm<BrandFormData>();
 
-  const onSubmit: SubmitHandler<SubCategoryFormData> = (data) => {
+  const onSubmit: SubmitHandler<BrandFormData> = (data) => {
     console.log("All Data:", data);
-    reset();
+    reset()
   };
 
   return (
     <div>
-      <h2 className="text-lg font-semibold capitalize">Create Sub-Category</h2>
+      <h2 className="text-lg font-semibold capitalize">Create Brand</h2>
 
       <form onSubmit={handleSubmit(onSubmit)} className="pt-4">
         <div className="flex md:flex-row flex-col gap-2 w-full">
           <InputField
-            label="Sub-Category Title"
+            label="Brand Title"
             name="title"
             type="text"
-            placeholder="Enter Sub-Category Name"
+            placeholder="Enter Brand Name"
             register={register}
             error={errors.title}
             required
-            
-          />
-
-          <SelectInput<SubCategoryFormData>
-            label="Category"
-            name="category"
-            options={categories}
-             control={control}
-            error={errors.category}
-            required
-            className="lg:mt-1"
           />
 
           <ImageUpload
@@ -79,4 +57,4 @@ const CreateSubCategory = () => {
   );
 };
 
-export default CreateSubCategory;
+export default Createbrand;
