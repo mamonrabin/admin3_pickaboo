@@ -1,6 +1,7 @@
+/* eslint-disable react-hooks/set-state-in-effect */
 "use client";
 
-import { useId, useState } from "react";
+import { useEffect, useId, useState } from "react";
 import Image from "next/image";
 import { Upload, X } from "lucide-react";
 import {
@@ -8,25 +9,55 @@ import {
   FieldValues,
   Path,
   UseFormRegister,
+  UseFormWatch,
 } from "react-hook-form";
 
 type ImageUploadProps<T extends FieldValues> = {
   label: string;
   name: Path<T>;
   register: UseFormRegister<T>;
+  watch?: UseFormWatch<T>;
   error?: FieldError;
   required?: boolean;
+  existingImage?: string;
 };
 
 const ImageUpload = <T extends FieldValues>({
   label,
   name,
   register,
+  watch,
   error,
   required = false,
+  existingImage,
 }: ImageUploadProps<T>) => {
-  const [preview, setPreview] = useState<string>("");
+  const [preview, setPreview] = useState(existingImage || "");
   const inputId = useId();
+
+  // Watch the field
+  const file = watch?.(name);
+
+ 
+  
+
+ useEffect(() => {
+  if (file && file.length > 0) {
+    const objectUrl = URL.createObjectURL(file[0]);
+    setPreview(objectUrl);
+
+    return () => URL.revokeObjectURL(objectUrl);
+  } else {
+    setPreview(existingImage || "");
+  }
+}, [file, existingImage]);
+
+  useEffect(() => {
+    return () => {
+      if (preview) {
+        URL.revokeObjectURL(preview);
+      }
+    };
+  }, [preview]);
 
   const { ref, onChange, ...rest } = register(name, {
     required: required ? `${label} is required` : false,
@@ -52,7 +83,10 @@ const ImageUpload = <T extends FieldValues>({
 
           <button
             type="button"
-            onClick={() => setPreview("")}
+            onClick={() => {
+              URL.revokeObjectURL(preview);
+              setPreview("");
+            }}
             className="absolute top-2 right-2 rounded-full bg-red-500 p-1 text-white"
           >
             <X size={16} />
@@ -87,16 +121,19 @@ const ImageUpload = <T extends FieldValues>({
         onChange={(e) => {
           onChange(e);
 
-          const file = e.target.files?.[0];
-          if (file) {
-            setPreview(URL.createObjectURL(file));
+          const selectedFile = e.target.files?.[0];
+
+          if (selectedFile) {
+            if (preview) {
+              URL.revokeObjectURL(preview);
+            }
+
+            setPreview(URL.createObjectURL(selectedFile));
           }
         }}
       />
 
-      {error && (
-        <p className="text-xs text-red-500">{error.message}</p>
-      )}
+      {error && <p className="text-xs text-red-500">{error.message}</p>}
     </div>
   );
 };

@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
+"use client";
 import {
   Table,
   TableBody,
@@ -7,45 +9,65 @@ import {
   TableRow,
 } from "@/components/ui/table";
 
-import c1 from "@/assets/category/c1.jpg";
-import c2 from "@/assets/category/c2.jpg";
-import c3 from "@/assets/category/c3.jpg";
-import c4 from "@/assets/category/c4.jpg";
-import Image from "next/image";
 import { Trash } from "lucide-react";
 import EditCategory from "./EditCategory";
 import Pagination from "@/reuseble_components/Paginations";
+import { useCategories, useDeleteCategory } from "@/hooks/category.hook";
+import { useState } from "react";
+import page from "@/app/products/create-product/page";
+import { BASE_URL } from "@/config";
+import Image from "next/image";
+import { toast } from "sonner";
+import { TCategory } from "@/types";
 
-const tableHeaders = ["SL", "Category Name", "Category Image", "Action"];
-
-const categories = [
-  {
-    id: 1,
-    name: "Home Appliances",
-    title: "Official Warranty | EMI with 34 Banks",
-    image: c1,
-  },
-  {
-    id: 2,
-    name: "Smartphone Series",
-    title: "Official Warranty | EMI with 34 Banks",
-    image: c2,
-  },
-  {
-    id: 3,
-    name: "Deals on Gadgets",
-    title: "Official Warranty | EMI with 34 Banks",
-    image: c3,
-  },
-  {
-    id: 4,
-    name: "Home Appliances",
-    title: "Official Warranty | EMI with 34 Banks",
-    image: c4,
-  },
+const tableHeaders = [
+  "SL",
+  "Category Name",
+  "title",
+  "Category Image",
+  "Action",
 ];
 
 const CategoryList = () => {
+  const [page, setPage] = useState(1);
+  const [limit, setLimit] = useState(10);
+
+  const {
+    data: categorysList,
+    isLoading,
+    isError,
+  } = useCategories(page, limit);
+  const { mutate: deleteCategory } = useDeleteCategory();
+
+  const categories = categorysList?.data?.data;
+  const meta = categorysList?.data?.meta;
+
+  const handleDelete = (id: string) => {
+    toast("Delete Category?", {
+      description: "This category will be permanently deleted.",
+      action: {
+        label: "Delete",
+        onClick: () => {
+          deleteCategory(id, {
+            onSuccess: (res: any) => {
+              toast.success(res?.message || "Category deleted successfully");
+            },
+            onError: (error: any) => {
+              toast.error(
+                error?.response?.data?.message || "Failed to delete category",
+              );
+            },
+          });
+        },
+      },
+      cancel: {
+        label: "Cancel",
+        onClick: () => {},
+      },
+      duration: 10000, // Keeps the confirmation toast visible for 10 seconds
+    });
+  };
+
   return (
     <div className="">
       <h2 className="text-lg font-semibold capitalize">Category List</h2>
@@ -60,35 +82,62 @@ const CategoryList = () => {
             ))}
           </TableRow>
         </TableHeader>
-        <TableBody className="">
-          {categories.map((category) => (
-            <TableRow key={category.id}>
-              <TableCell className="font-medium">{category.id}</TableCell>
-              <TableCell className="font-medium capitalize">{category.name}</TableCell>
-              <TableCell className="">
-                <Image
-                  width={300}
-                  height={300}
-                  src={category.image}
-                  alt={category.name}
-                  className="md:w-25 md:h-25 w-18 h-18 rounded object-cover"
-                />
-              </TableCell>
-              <TableCell className="flex md:mt-8 mt-4 gap-2">
-                <button className="bg-destructive hover:bg-destructive/70 duration-300 cursor-pointer text-secondary px-2 py-2 rounded text-sm">
-                  <Trash size={16} />
-                </button>
+        <TableBody>
+          {categories?.length ? (
+            categories.map((category: TCategory, index: number) => (
+              <TableRow key={category._id}>
+                <TableCell>{index + 1}</TableCell>
 
-             
-                <EditCategory/>
+                <TableCell className="capitalize">
+                  {category.categoryName}
+                </TableCell>
+
+                <TableCell className="capitalize">{category.title}</TableCell>
+
+                <TableCell>
+                  <Image
+                    width={300}
+                    height={300}
+                    src={BASE_URL + category.image}
+                    alt={category.categoryName}
+                    className="md:w-25 md:h-25 w-18 h-18 rounded object-cover"
+                    unoptimized
+                  />
+                </TableCell>
+
+                <TableCell className="flex md:mt-8 mt-4 gap-2">
+                  <button
+                    onClick={() => handleDelete(category._id)}
+                    className="bg-destructive hover:bg-destructive/70 duration-300 cursor-pointer text-secondary px-2 py-2 rounded text-sm"
+                  >
+                    <Trash size={16} />
+                  </button>
+
+                  <EditCategory category={category} />
+                </TableCell>
+              </TableRow>
+            ))
+          ) : (
+            <TableRow>
+              <TableCell
+                colSpan={tableHeaders.length}
+                className="text-center py-10 text-muted-foreground"
+              >
+                There are no categories.
               </TableCell>
             </TableRow>
-          ))}
+          )}
         </TableBody>
       </Table>
 
       <div className="py-4">
-        <Pagination/>
+        <Pagination
+          page={meta?.page}
+          limit={meta?.limit}
+          total={meta?.total}
+          setPage={setPage}
+          setLimit={setLimit}
+        />
       </div>
     </div>
   );

@@ -5,7 +5,7 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { Sidebar } from "./sidebar";
 import { useSidebar } from "./sidebar-context";
 import Header from "./Header";
-
+import { Toaster } from "sonner";
 
 const queryClient = new QueryClient();
 
@@ -27,6 +27,7 @@ export default function AdminPanelLayout({
       >
         <Header />
         <QueryClientProvider client={queryClient}>
+           <Toaster richColors position="top-right" />
           {children}
         </QueryClientProvider>
       </main>

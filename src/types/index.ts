@@ -17,3 +17,11 @@ export type TGroup = {
   groupLabel: string;
   menus: TMenu[];
 };
+
+export type TCategory = {
+  _id: string;
+  categoryName: string;
+  title: string;
+  slug: string;
+  image: string;
+};

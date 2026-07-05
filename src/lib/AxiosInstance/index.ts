@@ -2,13 +2,6 @@ import axios from "axios";
 
 import * as config from "@/config";
 
-// export const AxiosInstance = axios.create({
-//   baseURL: config.BASE_URL,
-// });
-
-
-
-
 export const AxiosInstance = axios.create({
   baseURL: config.BASE_URL,
 });
