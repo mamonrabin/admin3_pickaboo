@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useId, useState } from "react";
 import Image from "next/image";
 import { Upload, X } from "lucide-react";
 import {
@@ -25,11 +25,11 @@ const ImageUpload = <T extends FieldValues>({
   error,
   required = false,
 }: ImageUploadProps<T>) => {
-  const [preview, setPreview] = useState("");
+  const [preview, setPreview] = useState<string>("");
+  const inputId = useId();
 
-  const { onChange, ref, ...rest } = register(name, {
+  const { ref, onChange, ...rest } = register(name, {
     required: required ? `${label} is required` : false,
-    
   });
 
   return (
@@ -39,17 +39,7 @@ const ImageUpload = <T extends FieldValues>({
         {required && <span className="text-red-500">*</span>}
       </label>
 
-      {!preview ? (
-        <label
-          htmlFor={String(name)}
-          className="flex h-32 cursor-pointer flex-col items-center justify-center rounded-xl border border-dashed hover:border-primary"
-        >
-          <Upload />
-          <p className="mt-2 text-sm text-gray-500">
-            Click to upload image
-          </p>
-        </label>
-      ) : (
+      {preview ? (
         <div className="relative">
           <Image
             src={preview}
@@ -69,21 +59,31 @@ const ImageUpload = <T extends FieldValues>({
           </button>
 
           <label
-            htmlFor={String(name)}
+            htmlFor={inputId}
             className="absolute bottom-2 right-2 cursor-pointer rounded bg-black/70 px-3 py-1 text-sm text-white"
           >
             Change
           </label>
         </div>
+      ) : (
+        <label
+          htmlFor={inputId}
+          className="flex h-32 cursor-pointer flex-col items-center justify-center rounded-xl border border-dashed hover:border-primary"
+        >
+          <Upload size={24} />
+          <p className="mt-2 text-sm text-gray-500">
+            Click to upload image
+          </p>
+        </label>
       )}
 
       <input
-        id={String(name)}
+        id={inputId}
         type="file"
-        className="hidden"
         accept="image/*"
-        ref={ref}
+        className="hidden"
         {...rest}
+        ref={ref}
         onChange={(e) => {
           onChange(e);
 

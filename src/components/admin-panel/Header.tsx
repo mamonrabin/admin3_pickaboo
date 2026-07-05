@@ -3,7 +3,7 @@ import React from 'react';
 
 const Header = () => {
     return (
-        <div className='flex items-center gap-2 pt-5 justify-end'>
+        <div className='flex items-center gap-2 py-2 rounded-b justify-end bg-secondary shadow-xs md:px-8 px-4 sticky z-10 top-0 w-full'>
            <div>
             <form className='lg:inline-flex hidden items-center justify-between border rounded px-2 py-1 w-64'>
                 <input className='w-full outline-none' type="text" placeholder='Search...' />
