@@ -25,3 +25,17 @@ export type TCategory = {
   slug: string;
   image: string;
 };
+
+export type TSubCategory = {
+  _id: string;
+  category: {
+    _id: string;
+    categoryName: string;
+  };
+  subcategoryName: string;
+  image: string;
+  slug: string;
+  createdAt: string;
+  updatedAt: string;
+  __v: number;
+};

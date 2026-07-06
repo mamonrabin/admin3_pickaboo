@@ -1,4 +1,4 @@
-import { createCategory, deleteCategory, getCategories, updateCategory } from "@/services/category.api";
+import { createCategory, deleteCategory, getAllCategories, getCategories, updateCategory } from "@/services/category.api";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 
 
@@ -18,11 +18,18 @@ export const useCreateCategory = () => {
 };
 
 
-export const useCategories = (page: number, limit: number) => {
+export const useCategories = (page?: number, limit?: number) => {
   return useQuery({
     queryKey: ["categories", page, limit],
     queryFn: () => getCategories(page, limit),
     placeholderData: (previousData) => previousData,
+  });
+};
+
+export const useAllCategories = () => {
+  return useQuery({
+    queryKey: ["categories"],
+    queryFn: getAllCategories,
   });
 };
 

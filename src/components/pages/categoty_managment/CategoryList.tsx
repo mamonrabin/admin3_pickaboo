@@ -19,6 +19,7 @@ import { BASE_URL } from "@/config";
 import Image from "next/image";
 import { toast } from "sonner";
 import { TCategory } from "@/types";
+import TableSkeleton from "@/reuseble_components/TableSkeleton";
 
 const tableHeaders = [
   "SL",
@@ -82,7 +83,10 @@ const CategoryList = () => {
             ))}
           </TableRow>
         </TableHeader>
-        <TableBody>
+        {
+          isLoading ? (
+            <TableSkeleton rows={5} />
+          ):(<TableBody>
           {categories?.length ? (
             categories.map((category: TCategory, index: number) => (
               <TableRow key={category._id}>
@@ -127,7 +131,9 @@ const CategoryList = () => {
               </TableCell>
             </TableRow>
           )}
-        </TableBody>
+        </TableBody>)
+        }
+        
       </Table>
 
       <div className="py-4">

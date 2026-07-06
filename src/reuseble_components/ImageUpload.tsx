@@ -1,7 +1,7 @@
 /* eslint-disable react-hooks/set-state-in-effect */
 "use client";
 
-import { useEffect, useId, useState } from "react";
+import { useEffect, useId, useRef, useState } from "react";
 import Image from "next/image";
 import { Upload, X } from "lucide-react";
 import {
@@ -31,43 +31,42 @@ const ImageUpload = <T extends FieldValues>({
   required = false,
   existingImage,
 }: ImageUploadProps<T>) => {
-  const [preview, setPreview] = useState(existingImage || "");
   const inputId = useId();
 
-  // Watch the field
+  const [preview, setPreview] = useState(existingImage || "");
+
+  const fileInputRef = useRef<HTMLInputElement | null>(null);
+
   const file = watch?.(name);
 
- 
-  
-
- useEffect(() => {
-  if (file && file.length > 0) {
-    const objectUrl = URL.createObjectURL(file[0]);
-    setPreview(objectUrl);
-
-    return () => URL.revokeObjectURL(objectUrl);
-  } else {
-    setPreview(existingImage || "");
-  }
-}, [file, existingImage]);
-
   useEffect(() => {
-    return () => {
-      if (preview) {
-        URL.revokeObjectURL(preview);
-      }
-    };
-  }, [preview]);
+    if (file && file.length > 0) {
+      const objectUrl = URL.createObjectURL(file[0]);
+
+      setPreview(objectUrl);
+
+      return () => {
+        URL.revokeObjectURL(objectUrl);
+      };
+    }
+
+    setPreview(existingImage || "");
+
+    // Clear the file input after form reset
+    if (fileInputRef.current) {
+      fileInputRef.current.value = "";
+    }
+  }, [file, existingImage]);
 
   const { ref, onChange, ...rest } = register(name, {
     required: required ? `${label} is required` : false,
   });
 
   return (
-    <div className="flex flex-col gap-2 w-full max-w-xs">
+    <div className="flex w-full max-w-xs flex-col gap-2">
       <label className="text-sm font-medium">
         {label}
-        {required && <span className="text-red-500">*</span>}
+        {required && <span className="ml-1 text-red-500">*</span>}
       </label>
 
       {preview ? (
@@ -84,10 +83,13 @@ const ImageUpload = <T extends FieldValues>({
           <button
             type="button"
             onClick={() => {
-              URL.revokeObjectURL(preview);
               setPreview("");
+
+              if (fileInputRef.current) {
+                fileInputRef.current.value = "";
+              }
             }}
-            className="absolute top-2 right-2 rounded-full bg-red-500 p-1 text-white"
+            className="absolute right-2 top-2 rounded-full bg-red-500 p-1 text-white"
           >
             <X size={16} />
           </button>
@@ -117,23 +119,31 @@ const ImageUpload = <T extends FieldValues>({
         accept="image/*"
         className="hidden"
         {...rest}
-        ref={ref}
+        ref={(element) => {
+          ref(element);
+          fileInputRef.current = element;
+        }}
         onChange={(e) => {
           onChange(e);
 
           const selectedFile = e.target.files?.[0];
 
-          if (selectedFile) {
-            if (preview) {
-              URL.revokeObjectURL(preview);
-            }
+          if (!selectedFile) return;
 
-            setPreview(URL.createObjectURL(selectedFile));
-          }
+          const objectUrl = URL.createObjectURL(selectedFile);
+
+          setPreview((prev) => {
+            if (prev.startsWith("blob:")) {
+              URL.revokeObjectURL(prev);
+            }
+            return objectUrl;
+          });
         }}
       />
 
-      {error && <p className="text-xs text-red-500">{error.message}</p>}
+      {error && (
+        <p className="text-xs text-red-500">{error.message}</p>
+      )}
     </div>
   );
 };

@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
 
 import {
@@ -25,7 +26,7 @@ type Option = {
 type SelectInputProps<T extends FieldValues> = {
   label: string;
   name: Path<T>;
-  options: Option[];
+  options?: Option[];
   control: Control<T>;
   error?: FieldError;
   required?: boolean;
@@ -39,7 +40,7 @@ type SelectInputProps<T extends FieldValues> = {
 const SelectInput = <T extends FieldValues>({
   label,
   name,
-  options,
+  options = [],
   control,
   error,
   required = false,
@@ -53,27 +54,30 @@ const SelectInput = <T extends FieldValues>({
     <div className={`flex w-full flex-col gap-1 ${className}`}>
       <label className="text-sm font-medium">
         {label}
-        {required && <span className="text-red-500 ml-1">*</span>}
+        {required && <span className="ml-1 text-red-500">*</span>}
       </label>
 
       <Controller
         name={name}
         control={control}
+        defaultValue={"" as any}
         rules={{
           required: required ? `${label} is required` : false,
         }}
         render={({ field }) => (
           <Select
-            value={field.value}
+            value={field.value ?? ""}
             onValueChange={field.onChange}
             disabled={disabled}
           >
             <SelectTrigger
               className={`${inputstyle} ${
                 error ? "border-red-500" : "border-gray-300"
-              } data-[placeholder]:text-gray-500 ${placeholderColor}`} 
+              } data-[placeholder]:text-gray-500 ${placeholderColor}`}
             >
-              <SelectValue placeholder={placeholder ?? `Select ${label}`} />
+              <SelectValue
+                placeholder={placeholder ?? `Select ${label}`}
+              />
             </SelectTrigger>
 
             <SelectContent>

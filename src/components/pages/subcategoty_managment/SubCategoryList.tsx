@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
+"use client";
 import {
   Table,
   TableBody,
@@ -7,49 +9,64 @@ import {
   TableRow,
 } from "@/components/ui/table";
 
-import c1 from "@/assets/category/c1.jpg";
-import c2 from "@/assets/category/c2.jpg";
-import c3 from "@/assets/category/c3.jpg";
-import c4 from "@/assets/category/c4.jpg";
 import Image from "next/image";
 import { Trash } from "lucide-react";
 import Pagination from "@/reuseble_components/Paginations";
 import EditSubCategory from "./EditSubCategory";
+import { useState } from "react";
+import { useDeleteSubCategory, useSubCategories } from "@/hooks/subCategory.hook";
+import { BASE_URL } from "@/config";
+import { TSubCategory } from "@/types";
+import TableSkeleton from "@/reuseble_components/TableSkeleton";
+import { toast } from "sonner";
 
-const tableHeaders = ["SL", "SubCategory", "Category", "Sub Category Image", "Action"];
-
-const subcategories = [
-  {
-    id: 1,
-    name: "Home Appliances",
-    subCategory: "Washing Machine",
-    title: "Official Warranty | EMI with 34 Banks",
-    image: c1,
-  },
-  {
-    id: 2,
-    name: "Smartphone Series",
-    subCategory: "Smartphone",
-    title: "Official Warranty | EMI with 34 Banks",
-    image: c2,
-  },
-  {
-    id: 3,
-    name: "Deals on Gadgets",
-    subCategory: "Gadgets",
-    title: "Official Warranty | EMI with 34 Banks",
-    image: c3,
-  },
-  {
-    id: 4,
-    name: "Home Appliances",
-    subCategory: "Washing Machine",
-    title: "Official Warranty | EMI with 34 Banks",
-    image: c4,
-  },
+const tableHeaders = [
+  "SL",
+  "SubCategory",
+  "Category",
+  "Sub Category Image",
+  "Action",
 ];
 
 const SubCategoryList = () => {
+  const [page, setPage] = useState(1);
+  const [limit, setLimit] = useState(10);
+
+  const {
+    data: subcategorysList,
+    isLoading,
+  } = useSubCategories(page, limit);
+
+   const { mutate: deleteSubCategory } = useDeleteSubCategory();
+
+  const subcategories = subcategorysList?.data?.data;
+  const meta = subcategorysList?.data?.meta;
+
+  const handleDelete = (id: string) => {
+    toast("Delete Sub Category?", {
+      description: "This sub category will be permanently deleted.",
+      action: {
+        label: "Delete",
+        onClick: () => {
+          deleteSubCategory(id, {
+            onSuccess: (res: any) => {
+              toast.success(res?.message || "Sub Category deleted successfully");
+            },
+            onError: (error: any) => {
+              toast.error(
+                error?.response?.data?.message || "Failed to delete category",
+              );
+            },
+          });
+        },
+      },
+      cancel: {
+        label: "Cancel",
+        onClick: () => {},
+      },
+      duration: 10000, // Keeps the confirmation toast visible for 10 seconds
+    });
+  };
   return (
     <div className="">
       <h2 className="text-lg font-semibold capitalize">Sub Category List</h2>
@@ -64,36 +81,63 @@ const SubCategoryList = () => {
             ))}
           </TableRow>
         </TableHeader>
-        <TableBody className="">
-          {subcategories.map((subcategory) => (
-            <TableRow key={subcategory.id}>
-              <TableCell className="font-medium">{subcategory.id}</TableCell>
-              <TableCell className="font-medium capitalize">{subcategory.subCategory}</TableCell>
-              <TableCell className="font-medium capitalize">{subcategory.name}</TableCell>
-              <TableCell className="">
-                <Image
-                  width={300}
-                  height={300}
-                  src={subcategory.image}
-                  alt={subcategory.name}
-                  className="md:w-25 md:h-25 w-18 h-18 rounded object-cover"
-                />
-              </TableCell>
-              <TableCell className="flex md:mt-8 mt-4 gap-2">
-                <button className="bg-destructive hover:bg-destructive/70 duration-300 cursor-pointer text-secondary px-2 py-2 rounded text-sm">
-                  <Trash size={16} />
-                </button>
+        {isLoading ? (
+          <TableSkeleton rows={5} />
+        ) : (
+          <TableBody className="">
+            {subcategories?.length ? (
+              subcategories?.map((subcategory: TSubCategory, index: number) => (
+                <TableRow key={subcategory._id}>
+                  <TableCell className="font-medium">{index + 1}</TableCell>
+                  <TableCell className="font-medium capitalize">
+                    {subcategory.subcategoryName}
+                  </TableCell>
+                  <TableCell className="font-medium capitalize">
+                    {subcategory?.category?.categoryName}
+                  </TableCell>
+                  <TableCell className="">
+                    <Image
+                      width={300}
+                      height={300}
+                      src={BASE_URL + subcategory.image}
+                      alt={subcategory.subcategoryName}
+                      className="md:w-25 md:h-25 w-18 h-18 rounded object-cover"
+                      unoptimized
+                    />
+                  </TableCell>
+                  <TableCell className="flex md:mt-8 mt-4 gap-2">
+                    <button 
+                    onClick={() => handleDelete(subcategory._id)}
+                    className="bg-destructive hover:bg-destructive/70 duration-300 cursor-pointer text-secondary px-2 py-2 rounded text-sm">
+                      <Trash size={16} />
+                    </button>
 
-             
-              <EditSubCategory/>
-              </TableCell>
-            </TableRow>
-          ))}
-        </TableBody>
+                    <EditSubCategory subcategory={subcategory} />
+                  </TableCell>
+                </TableRow>
+              ))
+            ) : (
+              <TableRow>
+                <TableCell
+                  colSpan={tableHeaders.length}
+                  className="text-center py-10 text-muted-foreground"
+                >
+                  There are no sub categories.
+                </TableCell>
+              </TableRow>
+            )}
+          </TableBody>
+        )}
       </Table>
 
       <div className="py-4">
-        <Pagination/>
+        <Pagination
+          page={meta?.page}
+          limit={meta?.limit}
+          total={meta?.total}
+          setPage={setPage}
+          setLimit={setLimit}
+        />
       </div>
     </div>
   );
