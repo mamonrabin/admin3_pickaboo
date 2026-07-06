@@ -54,24 +54,24 @@ export function getMenuList(pathname: string): TGroup[] {
             },
           ],
         },
-        {
-          href: "/Size&Color",
-          label: "Size & Color",
-          active: pathname.includes("/Size&Color"),
-          icon: Shapes,
-          submenus: [
-            {
-              href: "/Size&Color/size",
-              label: "Size",
-              active: pathname === "/Size&Color/size",
-            },
-            {
-              href: "/Size&Color/color",
-              label: "Color",
-              active: pathname === "/Size&Color/color",
-            },
-          ],
-        },
+        // {
+        //   href: "/Size&Color",
+        //   label: "Size & Color",
+        //   active: pathname.includes("/Size&Color"),
+        //   icon: Shapes,
+        //   submenus: [
+        //     {
+        //       href: "/Size&Color/size",
+        //       label: "Size",
+        //       active: pathname === "/Size&Color/size",
+        //     },
+        //     {
+        //       href: "/Size&Color/color",
+        //       label: "Color",
+        //       active: pathname === "/Size&Color/color",
+        //     },
+        //   ],
+        // },
 
         {
           href: "/brand",

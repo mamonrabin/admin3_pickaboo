@@ -39,3 +39,10 @@ export type TSubCategory = {
   updatedAt: string;
   __v: number;
 };
+
+export type TBrand = {
+  _id: string;
+  title: string;
+  image: string;
+  slug: string;
+};

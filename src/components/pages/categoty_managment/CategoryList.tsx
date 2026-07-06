@@ -14,7 +14,6 @@ import EditCategory from "./EditCategory";
 import Pagination from "@/reuseble_components/Paginations";
 import { useCategories, useDeleteCategory } from "@/hooks/category.hook";
 import { useState } from "react";
-import page from "@/app/products/create-product/page";
 import { BASE_URL } from "@/config";
 import Image from "next/image";
 import { toast } from "sonner";
@@ -36,7 +35,6 @@ const CategoryList = () => {
   const {
     data: categorysList,
     isLoading,
-    isError,
   } = useCategories(page, limit);
   const { mutate: deleteCategory } = useDeleteCategory();
 
