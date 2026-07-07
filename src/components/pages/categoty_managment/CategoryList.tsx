@@ -9,7 +9,7 @@ import {
   TableRow,
 } from "@/components/ui/table";
 
-import { Trash } from "lucide-react";
+import { Trash, FolderOpen } from "lucide-react";
 import EditCategory from "./EditCategory";
 import Pagination from "@/reuseble_components/Paginations";
 import { useCategories, useDeleteCategory } from "@/hooks/category.hook";
@@ -21,11 +21,11 @@ import { TCategory } from "@/types";
 import TableSkeleton from "@/reuseble_components/TableSkeleton";
 
 const tableHeaders = [
-  "SL",
+  "#",
   "Category Name",
-  "title",
+  "Title",
   "Category Image",
-  "Action",
+  "Actions",
 ];
 
 const CategoryList = () => {
@@ -63,78 +63,122 @@ const CategoryList = () => {
         label: "Cancel",
         onClick: () => {},
       },
-      duration: 10000, // Keeps the confirmation toast visible for 10 seconds
+      duration: 10000,
     });
   };
 
   return (
-    <div className="">
-      <h2 className="text-lg font-semibold capitalize">Category List</h2>
-
-      <Table className="mt-4 rounded-lg overflow-hidden">
-        <TableHeader className="bg-primary">
-          <TableRow className="">
-            {tableHeaders.map((header) => (
-              <TableHead key={header} className="text-secondary">
-                {header}
-              </TableHead>
-            ))}
-          </TableRow>
-        </TableHeader>
-        {
-          isLoading ? (
-            <TableSkeleton rows={5} />
-          ):(<TableBody>
-          {categories?.length ? (
-            categories.map((category: TCategory, index: number) => (
-              <TableRow key={category._id}>
-                <TableCell>{index + 1}</TableCell>
-
-                <TableCell className="capitalize">
-                  {category.categoryName}
-                </TableCell>
-
-                <TableCell className="capitalize">{category.title}</TableCell>
-
-                <TableCell>
-                  <Image
-                    width={300}
-                    height={300}
-                    src={BASE_URL + category.image}
-                    alt={category.categoryName}
-                    className="md:w-25 md:h-25 w-18 h-18 rounded object-cover"
-                    unoptimized
-                  />
-                </TableCell>
-
-                <TableCell className="flex md:mt-8 mt-4 gap-2">
-                  <button
-                    onClick={() => handleDelete(category._id)}
-                    className="bg-destructive hover:bg-destructive/70 duration-300 cursor-pointer text-secondary px-2 py-2 rounded text-sm"
-                  >
-                    <Trash size={16} />
-                  </button>
-
-                  <EditCategory category={category} />
-                </TableCell>
-              </TableRow>
-            ))
-          ) : (
-            <TableRow>
-              <TableCell
-                colSpan={tableHeaders.length}
-                className="text-center py-10 text-muted-foreground"
-              >
-                There are no categories.
-              </TableCell>
-            </TableRow>
-          )}
-        </TableBody>)
-        }
+    <div className="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
+      {/* Header */}
+      <div className="flex items-center justify-between p-6 border-b border-gray-200">
+        <div className="flex items-center gap-3">
+          <div className="bg-blue-50 p-2.5 rounded-lg">
+            <FolderOpen size={20} className="text-blue-600" />
+          </div>
+          <div>
+            <h2 className="text-xl font-bold text-gray-900">Category List</h2>
+            <p className="text-sm text-gray-500">
+              Total <span className="font-semibold text-gray-700">{meta?.total || 0}</span> categories
+            </p>
+          </div>
+        </div>
         
-      </Table>
+      </div>
 
-      <div className="py-4">
+      {/* Table Container */}
+      <div className="overflow-x-auto">
+        <Table>
+          <TableHeader className="bg-gray-50">
+            <TableRow className="hover:bg-transparent border-b border-gray-200">
+              {tableHeaders.map((header) => (
+                <TableHead 
+                  key={header} 
+                  className="text-xs font-semibold text-gray-600 uppercase tracking-wider py-3 px-4"
+                >
+                  {header}
+                </TableHead>
+              ))}
+            </TableRow>
+          </TableHeader>
+
+          {isLoading ? (
+            <TableSkeleton rows={5} />
+          ) : (
+            <TableBody>
+              {categories?.length ? (
+                categories.map((category: TCategory, index: number) => (
+                  <TableRow 
+                    key={category._id} 
+                    className="hover:bg-gray-50/50 transition-colors border-b border-gray-100"
+                  >
+                    <TableCell className="py-3 px-4 text-sm text-gray-500 font-medium text-center">
+                      {index + 1}
+                    </TableCell>
+
+                    <TableCell className="py-3 px-4">
+                      <span className="text-sm font-semibold text-gray-900 capitalize">
+                        {category.categoryName}
+                      </span>
+                    </TableCell>
+
+                    <TableCell className="py-3 px-4">
+                      <span className="text-sm text-gray-700 capitalize">
+                        {category.title}
+                      </span>
+                    </TableCell>
+
+                    <TableCell className="py-3 px-4">
+                      <div className="w-16 h-16 rounded-lg overflow-hidden border border-gray-200 bg-gray-50">
+                        <Image
+                          width={300}
+                          height={300}
+                          src={BASE_URL + category.image}
+                          alt={category.categoryName}
+                          className="w-full h-full object-cover hover:scale-105 transition-transform duration-300"
+                          unoptimized
+                        />
+                      </div>
+                    </TableCell>
+
+                    <TableCell className="py-3 px-4">
+                      <div className="flex items-center gap-2">
+                        <button
+                          onClick={() => handleDelete(category._id)}
+                          className="p-2 bg-red-50 hover:bg-red-100 text-red-600 rounded-lg transition-all duration-200 hover:shadow-sm"
+                          
+                        >
+                          <Trash size={16} />
+                        </button>
+
+                        <EditCategory category={category} />
+                      </div>
+                    </TableCell>
+                  </TableRow>
+                ))
+              ) : (
+                <TableRow>
+                  <TableCell
+                    colSpan={tableHeaders.length}
+                    className="text-center py-16 text-gray-500"
+                  >
+                    <div className="flex flex-col items-center gap-3">
+                      <div className="w-16 h-16 bg-gray-100 rounded-full flex items-center justify-center">
+                        <FolderOpen size={32} className="text-gray-300" />
+                      </div>
+                      <p className="text-lg font-medium text-gray-700">No categories found</p>
+                      <p className="text-sm text-gray-400">Start by adding your first category</p>
+                    </div>
+                  </TableCell>
+                </TableRow>
+              )}
+            </TableBody>
+          )}
+        </Table>
+      </div>
+
+      {/* Footer/Pagination */}
+      <div className="py-4 px-4">
+        
         <Pagination
           page={meta?.page}
           limit={meta?.limit}
