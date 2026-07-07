@@ -33,10 +33,10 @@ const SelectorSideBar = () => {
   return (
     <div>
       <Sheet>
-        <SheetTrigger>
-          <button className="px-2  py-2 md:hidden flex rounded bg-primary hover:bg-primary/80 duration-300 text-secondary text-sm cursor-pointer">
+        <SheetTrigger className="px-2  py-2 md:hidden flex rounded bg-primary hover:bg-primary/80 duration-300 text-secondary text-sm cursor-pointer">
+          
             <PanelLeftOpen size={16} />
-          </button>
+          
         </SheetTrigger>
         <SheetContent className="p-8">
           <h2 className="md:text-lg text-base font-medium capitalize">

@@ -1,3 +1,4 @@
+"use client";
 import {
   Table,
   TableBody,
@@ -12,6 +13,11 @@ import Image from "next/image";
 import { Trash } from "lucide-react";
 import Pagination from "@/reuseble_components/Paginations";
 import EditProduct from "./EditProduct";
+import { useAllProducts } from "@/hooks/product.hook";
+import { useState } from "react";
+import { BASE_URL } from "@/config";
+import ProductDescription from "./ProductDescription";
+import TableSkeleton from "@/reuseble_components/TableSkeleton";
 
 const tableHeaders = [
   "SL",
@@ -26,171 +32,27 @@ const tableHeaders = [
   "Inventory Type",
   "Inventory Details",
   "Quantity",
+  "AvailableQuantity",
   "Category",
   "Subcategory",
   "Brand",
   "Action",
 ];
 
-const products = [
-  {
-    id: 1,
-    title: "Home Appliances",
-    frontView: shirt,
-    backView: shirt,
-    description: "description",
-    discountType: "Flat",
-    discount: "৳ 50",
-    mrp: "৳ 500",
-    price: "৳ 450",
-    inventoryType: "colorSize",
-    inventory: [
-      {
-        size: "XL",
-        color: "Red",
-        quantity: 18,
-        sold: 8,
-        hold: 10,
-      },
-      
-    ],
-    quantity: 12,
-    category: "category-01",
-    subCategory: "subCategory-01",
-    brand: "brand-1",
-  },
-  {
-    id: 3,
-    title: "Home Appliances",
-    frontView: shirt,
-    backView: shirt,
-    description: "description",
-    discountType: "Flat",
-    discount: "৳ 50",
-    mrp: "৳ 500",
-    price: "৳ 450",
-    inventoryType: "colorSize",
-    inventory: [
-      {
-        size: "XL",
-        color: "Red",
-        quantity: 18,
-        sold: 8,
-        hold: 10,
-      },
-      {
-        size: "XL",
-        color: "Red",
-        quantity: 18,
-        sold: 8,
-        hold: 10,
-      },
-      
-    ],
-    quantity: 12,
-    category: "category-01",
-    subCategory: "subCategory-01",
-    brand: "brand-1",
-  },
-  {
-    id: 3,
-    title: "Home Appliances",
-    frontView: shirt,
-    backView: shirt,
-    description: "description",
-    discountType: "Flat",
-    discount: "৳ 50",
-    mrp: "৳ 500",
-    price: "৳ 450",
-    inventoryType: "colorSize",
-    inventory: [
-      {
-        size: "XL",
-        color: "Red",
-        quantity: 18,
-        sold: 8,
-        hold: 10,
-      },
-      {
-        size: "XL",
-        color: "Red",
-        quantity: 18,
-        sold: 8,
-        hold: 10,
-      },
-      {
-        size: "XL",
-        color: "Red",
-        quantity: 18,
-        sold: 8,
-        hold: 10,
-      },
-      
-    ],
-    quantity: 12,
-    category: "category-01",
-    subCategory: "subCategory-01",
-    brand: "brand-1",
-  },
-  {
-    id: 4,
-    title: "Home Appliances",
-    frontView: shirt,
-    backView: shirt,
-    description: "description",
-    discountType: "Flat",
-    discount: "৳ 50",
-    mrp: "৳ 500",
-    price: "৳ 450",
-    inventoryType: "colorSize",
-    inventory: [
-      {
-        size: "XL",
-        color: "Red",
-        quantity: 18,
-        sold: 8,
-        hold: 10,
-      },
-      {
-        size: "XL",
-        color: "Red",
-        quantity: 18,
-        sold: 8,
-        hold: 10,
-      },
-      {
-        size: "XL",
-        color: "Red",
-        quantity: 18,
-        sold: 8,
-        hold: 10,
-      },
-      {
-        size: "XL",
-        color: "Red",
-        quantity: 18,
-        sold: 8,
-        hold: 10,
-      },
-      
-    ],
-    quantity: 12,
-    category: "category-01",
-    subCategory: "subCategory-01",
-    brand: "brand-1",
-  },
-];
-
-
-
 const ProductsList = () => {
+  const [page, setPage] = useState(1);
+  const [limit, setLimit] = useState(10);
+
+  const { data: productsList, isLoading } = useAllProducts(page, limit);
+  const products = productsList?.data?.data;
+  const meta = productsList?.data?.meta;
   return (
     <div className="">
       <h2 className="text-lg font-semibold capitalize">Product List</h2>
 
       <Table className="mt-4 rounded-lg overflow-hidden">
         <TableHeader className="bg-primary">
-          <TableRow className="">
+          <TableRow>
             {tableHeaders.map((header) => (
               <TableHead key={header} className="text-secondary">
                 {header}
@@ -198,113 +60,154 @@ const ProductsList = () => {
             ))}
           </TableRow>
         </TableHeader>
-        <TableBody>
-  {products.map((product, index) => (
-    <TableRow key={product.id}>
-      <TableCell className="text-center">{index + 1}</TableCell>
 
-      <TableCell className="text-center">{product.title}</TableCell>
+        {isLoading ? (
+          <TableSkeleton rows={5} />
+        ) : (
+          <TableBody>
+            {products?.length ? (
+              products?.map((product, index) => (
+                <TableRow key={product._id}>
+                  <TableCell className="text-center">{index + 1}</TableCell>
 
-      <TableCell className="text-center">
-        <Image
-          src={product.frontView}
-          alt="front"
-          width={60}
-          height={60}
-        />
-      </TableCell>
+                  {/* Title */}
+                  <TableCell className="text-center">{product.title}</TableCell>
 
-      <TableCell className="text-center">
-        <Image
-          src={product.backView}
-          alt="back"
-          width={60}
-          height={60}
-        />
-      </TableCell>
+                  {/* Front Image */}
+                  <TableCell className="text-center">
+                    <Image
+                      src={BASE_URL + product.thumbnailImage}
+                      alt={product.title}
+                      width={60}
+                      height={60}
+                      className="mx-auto rounded"
+                      unoptimized
+                    />
+                  </TableCell>
 
-      <TableCell className="text-center">
-        {product.description}
-      </TableCell>
+                  {/* Back Image */}
+                  <TableCell className="text-center">
+                    {
+                      product.backviewImage ? <Image
+                      src={BASE_URL + product.backviewImage}
+                      alt={product.title}
+                      width={60}
+                      height={60}
+                      className="mx-auto rounded"
+                      unoptimized
+                    /> : "N/A"
+                    }
+                    
+                  </TableCell>
 
-      <TableCell className="text-center">
-        {product.discountType}
-      </TableCell>
+                  {/* Description */}
+                  <TableCell className="">
+                    <ProductDescription product={product} />
+                  </TableCell>
 
-      <TableCell className="text-center">
-        {product.discount}
-      </TableCell>
+                  {/* Discount Type */}
+                  <TableCell className="text-center">
+                    {product.discountType}
+                  </TableCell>
 
-      <TableCell className="text-center">
-        {product.mrp}
-      </TableCell>
+                  {/* Discount */}
+                  <TableCell className="text-center">
+                    {product.discount}
+                  </TableCell>
 
-      <TableCell className="text-center">
-        {product.price}
-      </TableCell>
+                  {/* MRP */}
+                  <TableCell className="text-center">
+                    {product.mrpPrice}
+                  </TableCell>
 
-      <TableCell className="text-center">
-        {product.inventoryType}
-      </TableCell>
+                  {/* Price */}
+                  <TableCell className="text-center">{product.price}</TableCell>
 
-      <TableCell className="p-2 min-w-[500px]">
-  <div className="grid grid-cols-3 gap-2">
-    {product.inventory.map((item, index) => (
-      <div
-        key={index}
-        className="bg-secondary shadow-xs hover:shadow-md duration-300 cursor-pointer border border-[#262626]/10 rounded p-3 text-[12px] font-medium"
-      >
-        <div>
-          <p>Size: {item.size}</p>
-          <p>Color: {item.color}</p>
-          <p>Quantity: {item.quantity}</p>
-        </div>
+                  {/* Inventory Type */}
+                  <TableCell className="text-center">
+                    {product.inventoryType}
+                  </TableCell>
 
-        <div className="mt-2">
-          <p className="text-[#6967E7]">
-            Sold Quantity: {item.sold}
-          </p>
-          <p className="text-orange-500">
-            Hold Quantity: {item.hold}
-          </p>
-        </div>
-      </div>
-    ))}
-  </div>
-</TableCell>
+                  {/* Inventories */}
+                  <TableCell className="p-2 min-w-[500px]">
+                    <div className="grid grid-cols-3 gap-2">
+                      {product.inventories.map((item) => (
+                        <div
+                          key={item._id}
+                          className="bg-secondary shadow-xs hover:shadow-md duration-300 border rounded p-3 text-[13px] font-medium"
+                        >
+                          <p>Size: {item.size}</p>
+                          <p>Color: {item.colorName}</p>
+                          <p>Quantity: {item.quantity}</p>
+                          <div className="mt-2 flex flex-col gap-0.5">
+                            <p>Sold Quantity: {item.soldQuantity || 0}</p>
+                            <p>Hold Quantity: {item.holdQuantity || 0}</p>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  </TableCell>
 
-      <TableCell className="text-center">
-        {product.quantity}
-      </TableCell>
+                  {/* Quantity */}
+                  <TableCell className="text-center">
+                    {product.quantity}
+                  </TableCell>
+                  <TableCell className="text-center">
+                    {product.availableQuantity}
+                  </TableCell>
 
-      <TableCell className="text-center">
-        {product.category}
-      </TableCell>
+                  {/* Category */}
+                  <TableCell className="text-center">
+                    {product.category.categoryName}
+                  </TableCell>
 
-      <TableCell className="text-center">
-        {product.subCategory}
-      </TableCell>
+                  {/* Sub Category */}
+                  <TableCell className="text-center">
+                    {product.subCategory ?  product.subCategory.subcategoryName : "N/A"}
+                  </TableCell>
 
-      <TableCell className="text-center">
-        {product.brand}
-      </TableCell>
+                  {/* Brand */}
+                  <TableCell className="text-center">
+                    {
+                      product.brand ? product.brand.title : "N/A"
+                    }
+                   
+                  </TableCell>
 
-      <TableCell>
-        <div className="flex   gap-2">
-          <button className="bg-destructive hover:bg-destructive/70 duration-300 cursor-pointer text-secondary px-2 py-2 rounded text-sm">
-            <Trash size={16} />
-          </button>
+                  {/* Action */}
+                  <TableCell>
+                    <div className="flex gap-2">
+                      <button className="bg-destructive hover:bg-destructive/70 duration-300 cursor-pointer text-secondary px-2 py-2 rounded text-sm">
+                        <Trash size={16} />
+                      </button>
 
-          <EditProduct />
-        </div>
-      </TableCell>
-    </TableRow>
-  ))}
-</TableBody>
+                      <EditProduct />
+                    </div>
+                  </TableCell>
+                </TableRow>
+              ))
+            ) : (
+              <TableRow>
+                <TableCell
+                  colSpan={tableHeaders.length}
+                  className="text-center py-10 text-muted-foreground"
+                >
+                  There are no products.
+                </TableCell>
+              </TableRow>
+            )}
+          </TableBody>
+        )}
       </Table>
 
       <div className="py-4">
-        <Pagination />
+        <Pagination
+          page={meta?.page}
+          limit={meta?.limit}
+          total={meta?.total}
+          setPage={setPage}
+          setLimit={setLimit}
+        />
       </div>
     </div>
   );

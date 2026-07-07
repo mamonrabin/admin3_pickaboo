@@ -31,10 +31,10 @@ const EditProduct = () => {
   return (
   <div>
       <Sheet>
-      <SheetTrigger>
-           <button className="bg-primary hover:bg-primary/80 duration-300 cursor-pointer text-secondary px-2 py-2 rounded text-sm">
+      <SheetTrigger className="bg-primary hover:bg-primary/80 duration-300 cursor-pointer text-secondary px-2 py-2 rounded text-sm">
+         
                   <SquarePen size={16} />
-                </button>
+              
       </SheetTrigger>
       <SheetContent className="!max-w-2xl">
         <div className="border-b py-4 px-8">
