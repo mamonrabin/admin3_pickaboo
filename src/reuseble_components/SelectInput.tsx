@@ -31,6 +31,7 @@ type SelectInputProps<T extends FieldValues> = {
   error?: FieldError;
   required?: boolean;
   disabled?: boolean;
+  onValueChange?: (value: string) => void;
   placeholder?: string;
   className?: string;
   inputstyle?: string;
@@ -45,6 +46,7 @@ const SelectInput = <T extends FieldValues>({
   error,
   required = false,
   disabled = false,
+  onValueChange,
   placeholder,
   className = "",
   inputstyle = "",
@@ -67,17 +69,18 @@ const SelectInput = <T extends FieldValues>({
         render={({ field }) => (
           <Select
             value={field.value ?? ""}
-            onValueChange={field.onChange}
             disabled={disabled}
+            onValueChange={(value) => {
+              field.onChange(value); // Update React Hook Form
+              onValueChange?.(value); // Notify parent
+            }}
           >
             <SelectTrigger
               className={`${inputstyle} ${
                 error ? "border-red-500" : "border-gray-300"
               } data-[placeholder]:text-gray-500 ${placeholderColor}`}
             >
-              <SelectValue
-                placeholder={placeholder ?? `Select ${label}`}
-              />
+              <SelectValue placeholder={placeholder ?? `Select ${label}`} />
             </SelectTrigger>
 
             <SelectContent>

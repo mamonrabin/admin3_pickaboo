@@ -9,17 +9,18 @@ import {
   TableRow,
 } from "@/components/ui/table";
 
-import shirt from "@/assets/products/product.webp";
 import Image from "next/image";
-import { Eye, Trash } from "lucide-react";
+import { Trash } from "lucide-react";
 import Pagination from "@/reuseble_components/Paginations";
 import EditProduct from "./EditProduct";
-import { useAllProducts, useDeleteProduct } from "@/hooks/product.hook";
-import { useState } from "react";
+import { useDeleteProduct } from "@/hooks/product.hook";
+
 import { BASE_URL } from "@/config";
 import ProductDescription from "./ProductDescription";
 import TableSkeleton from "@/reuseble_components/TableSkeleton";
 import { toast } from "sonner";
+import { TMeta, TProduct } from "@/types";
+import React from "react";
 
 const tableHeaders = [
   "SL",
@@ -41,14 +42,24 @@ const tableHeaders = [
   "Action",
 ];
 
-const ProductsList = () => {
-  const [page, setPage] = useState(1);
-  const [limit, setLimit] = useState(10);
+interface ProductsListProps {
+  products: TProduct[];
+  meta: TMeta;
+  isLoading: boolean;
+  setPage: (page: number) => void;
+  setLimit: (limit: number) => void;
+}
 
-  const { data: productsList, isLoading } = useAllProducts(page, limit);
+const ProductsList:React.FC<ProductsListProps> = ({ products, meta, isLoading, setPage, setLimit }) => {
+  // const [page, setPage] = useState(1);
+  // const [limit, setLimit] = useState(10);
+
+  // const { data: productsList, isLoading } = useAllProducts({page, limit});
   const { mutate: deleteProduct } = useDeleteProduct();
-  const products = productsList?.data?.data;
-  const meta = productsList?.data?.meta;
+  // const products = productsList?.data?.data;
+  // const meta = productsList?.data?.meta;
+
+  console.log("-------how many have----------", products);
 
   const handleDelete = (id: string) => {
     toast("Delete Category?", {
@@ -109,7 +120,7 @@ const ProductsList = () => {
           ) : (
             <TableBody>
               {products?.length ? (
-                products?.map((product, index) => (
+                products?.map((product: TProduct, index: number) => (
                   <TableRow
                     key={product._id}
                     className="hover:bg-gray-50/50 transition-colors border-b border-gray-100"
@@ -207,42 +218,56 @@ const ProductsList = () => {
                     </TableCell>
 
                     {/* Inventories */}
-               <TableCell className="text-sm p-1 grid grid-cols-3 gap-1 w-105">
-  {product.inventories?.map((item) => (
-    <div 
-      key={item._id} 
-      className="border border-gray-200 rounded-md p-2  hover:shadow-sm transition-all duration-200"
-    >
-      <div>
-        <p className="text-gray-700">
-          <span className="font-semibold text-gray-600">Size :</span>{" "}
-          <span className="font-medium">{item.size ? item.size : "N/A"}</span>
-        </p>
-        <p className="text-gray-700">
-          <span className="font-semibold text-gray-600">Color :</span>{" "}
-          <span className="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800">
-            {item.colorName ? item.colorName : "N/A"}
-          </span>
-        </p>
-        <p className="text-gray-700">
-          <span className="font-semibold text-gray-600">Quantity :</span>{" "}
-          <span className="font-bold text-gray-900">{item.quantity}</span>
-        </p>
-      </div>
+                    <TableCell className="text-sm p-1 grid grid-cols-3 gap-1 w-105">
+                      {product.inventories?.map((item) => (
+                        <div
+                          key={item._id}
+                          className="border border-gray-200 rounded-md p-2  hover:shadow-sm transition-all duration-200"
+                        >
+                          <div>
+                            <p className="text-gray-700">
+                              <span className="font-semibold text-gray-600">
+                                Size :
+                              </span>{" "}
+                              <span className="font-medium">
+                                {item.size ? item.size : "N/A"}
+                              </span>
+                            </p>
+                            <p className="text-gray-700">
+                              <span className="font-semibold text-gray-600">
+                                Color :
+                              </span>{" "}
+                              <span className="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800">
+                                {item.colorName ? item.colorName : "N/A"}
+                              </span>
+                            </p>
+                            <p className="text-gray-700">
+                              <span className="font-semibold text-gray-600">
+                                Quantity :
+                              </span>{" "}
+                              <span className="font-bold text-gray-900">
+                                {item.quantity}
+                              </span>
+                            </p>
+                          </div>
 
-      <div className="mt-1.5 pt-1.5 border-t border-gray-300">
-        <p className="text-green-600 font-medium">
-          <span className="font-semibold text-gray-600">Sold :</span>{" "}
-          {product.soldQuantity || 0}
-        </p>
-        <p className="text-orange-500 font-medium">
-          <span className="font-semibold text-gray-600">Hold :</span>{" "}
-          {product.holdQuantity || 0}
-        </p>
-      </div>
-    </div>
-  ))}
-</TableCell>
+                          <div className="mt-1.5 pt-1.5 border-t border-gray-300">
+                            <p className="text-green-600 font-medium">
+                              <span className="font-semibold text-gray-600">
+                                Sold :
+                              </span>{" "}
+                              {product.soldQuantity || 0}
+                            </p>
+                            <p className="text-orange-500 font-medium">
+                              <span className="font-semibold text-gray-600">
+                                Hold :
+                              </span>{" "}
+                              0
+                            </p>
+                          </div>
+                        </div>
+                      ))}
+                    </TableCell>
 
                     {/* Quantity */}
                     <TableCell className="text-center py-3 px-4">
@@ -255,7 +280,7 @@ const ProductsList = () => {
                     <TableCell className="text-center py-3 px-4">
                       <span
                         className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${
-                          product.availableQuantity > 0
+                          (product?.availableQuantity ?? 0) > 0
                             ? "bg-green-100 text-green-800"
                             : "bg-red-100 text-red-800"
                         }`}
@@ -292,16 +317,12 @@ const ProductsList = () => {
                       <div className="flex items-center justify-center gap-2">
                         <button
                           onClick={() => handleDelete(product._id)}
-                           className="p-2 bg-red-50 hover:bg-red-100 text-red-600 rounded-lg transition-all duration-200 hover:shadow-sm"
+                          className="p-2 bg-red-50 hover:bg-red-100 text-red-600 rounded-lg transition-all duration-200 hover:shadow-sm"
                         >
                           <Trash size={16} />
                         </button>
-                        <button
-                          className="p-1.5 bg-blue-50 hover:bg-blue-100 text-blue-600 rounded-lg transition-colors"
-                          title="Edit"
-                        >
-                          <EditProduct />
-                        </button>
+
+                        <EditProduct />
                       </div>
                     </TableCell>
                   </TableRow>
@@ -342,8 +363,7 @@ const ProductsList = () => {
       </div>
 
       {/* Footer/Pagination */}
-       <div className="py-4 px-4">
-        
+      <div className="py-4 px-4">
         <Pagination
           page={meta?.page}
           limit={meta?.limit}

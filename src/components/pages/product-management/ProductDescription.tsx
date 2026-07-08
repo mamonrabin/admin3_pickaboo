@@ -3,10 +3,16 @@
 
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import { BASE_URL } from "@/config";
+import { TProduct } from "@/types";
 import { Ellipsis } from "lucide-react";
 import Image from "next/image";
+import React from "react";
 
-const ProductDescription = ({ product }) => {
+interface productDescriptionProps {
+  product: TProduct;
+}
+
+const ProductDescription: React.FC<productDescriptionProps> = ({ product }) => {
   const {
     title,
     mrpPrice,
@@ -15,7 +21,7 @@ const ProductDescription = ({ product }) => {
     discountType,
     quantity,
     soldQuantity,
-    availableQuantity,
+    availableQuantity = 0,
     description,
     sku,
     category,
@@ -34,7 +40,7 @@ const ProductDescription = ({ product }) => {
     totalReviews,
     specifications,
     metaTitle,
-    metaDescription
+    metaDescription,
   } = product;
 
   // const allImages = [thumbnailImage, backviewImage, ...images];
@@ -237,7 +243,7 @@ const ProductDescription = ({ product }) => {
                   <div className="flex justify-between">
                     <span className="text-gray-600">MRP Price</span>
                     <span className="font-medium text-gray-900">
-                      ₹{mrpPrice}
+                      ৳{mrpPrice}
                     </span>
                   </div>
                   {discountType && (
@@ -253,7 +259,7 @@ const ProductDescription = ({ product }) => {
                       Final Price
                     </span>
                     <span className="font-bold text-lg text-blue-600">
-                      ₹{price}
+                      ৳{price}
                     </span>
                   </div>
                 </div>
@@ -423,14 +429,12 @@ const ProductDescription = ({ product }) => {
                         <div className="flex justify-between text-sm">
                           <span className="text-gray-600">Sold</span>
                           <span className="text-orange-600">
-                            {item.soldQuantity || 0}
+                            {soldQuantity || 0}
                           </span>
                         </div>
                         <div className="flex justify-between text-sm">
                           <span className="text-gray-600">Hold</span>
-                          <span className="text-yellow-600">
-                            {item.holdQuantity || 0}
-                          </span>
+                          <span className="text-yellow-600">0</span>
                         </div>
                       </div>
                     </div>
@@ -496,7 +500,9 @@ const ProductDescription = ({ product }) => {
               <div className="space-y-3">
                 <div>
                   <p className="text-xs text-gray-500 mb-1">Meta Title</p>
-                  <p className="text-sm font-medium text-gray-800">{metaTitle}</p>
+                  <p className="text-sm font-medium text-gray-800">
+                    {metaTitle}
+                  </p>
                 </div>
                 <div>
                   <p className="text-xs text-gray-500 mb-1">Meta Description</p>

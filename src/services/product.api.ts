@@ -24,15 +24,6 @@ export const getProducts = async () => {
 //   return data;
 // };
 
-export type ProductFilter = {
-  page?: number;
-  limit?: number;
-  category?: string;
-  subCategory?: string;
-  brand?: string;
-  dateFilter?: string;
-};
-
 // export const getAllProducts = async (filters: ProductFilter) => {
 //   const params = new URLSearchParams();
 
@@ -45,10 +36,40 @@ export type ProductFilter = {
 //   return data;
 // };
 
-export const getAllProducts = async (page = 1, limit = 10) => {
-  const { data } = await AxiosInstance.get(
-    `/product?page=${page}&limit=${limit}`,
-  );
+export type ProductFilter = {
+  page?: number;
+  limit?: number;
+  brand?: string;
+  category?: string;
+  subCategory?: string;
+  dateFilter?: string;
+};
+
+export const getAllProducts = async ({
+  page = 1,
+  limit = 10,
+  brand,
+  category,
+  subCategory,
+  dateFilter
+}: ProductFilter) => {
+
+  const params = new URLSearchParams();
+
+  params.append("page", page.toString());
+  params.append("limit", limit.toString());
+
+  if (brand) params.append("brand", brand);
+  if (category) params.append("category", category);
+  if (subCategory) params.append("subCategory", subCategory);
+  if (dateFilter) params.append("dateFilter", dateFilter);
+
+
+  // const { data } = await AxiosInstance.get(
+  //   `/product?page=${page}&limit=${limit}`,
+  // );
+
+   const { data } = await AxiosInstance.get(`/product?${params.toString()}`);
 
   return data;
 };

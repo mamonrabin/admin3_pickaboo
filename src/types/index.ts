@@ -46,3 +46,56 @@ export type TBrand = {
   image: string;
   slug: string;
 };
+
+export type TInventory = {
+  _id: string;
+  id: string;
+  color?: string;
+  colorName?: string;
+  size?: string;
+  quantity: number;
+};
+
+export type TSpecification = {
+  key: string;
+  value: string;
+};
+
+export type TProduct = {
+  _id: string;
+  title: string;
+  mrpPrice: number;
+  discount?: number;
+  discountType?: string;
+  soldQuantity?: number;
+  description: string;
+  category: TCategory;
+  subCategory?: TSubCategory;
+  brand?: TBrand;
+  thumbnailImage: string;
+  backviewImage?: string | null | undefined;
+  images?: string[];
+  freeShipping?: boolean;
+  inventoryType?: string;
+  inventories?: TInventory[];
+  stock_status?: string;
+  label?: string;
+  tags?: string[];
+  specifications?: TSpecification[];
+  averageRating?: number;
+  totalReviews?: number;
+  metaTitle?: string;
+  metaDescription?: string;
+  quantity?: number;
+  slug?: string;
+  sku?: string;
+  price: number;
+  availableQuantity?: number;
+};
+
+export type TMeta = {
+  page: number;
+  limit: number;
+  total: number;
+  totalPage: number;
+};
