@@ -20,7 +20,8 @@ import { useCreateProduct } from "@/hooks/product.hook";
 import { toast } from "sonner";
 import TagInput from "@/reuseble_components/TagInput";
 import { useRouter } from "next/navigation";
-import { Plus, Trash2, X } from "lucide-react";
+import { Plus, Trash2 } from "lucide-react";
+import { useState } from "react";
 
 const CreateProducts = () => {
   const discountType = [
@@ -44,6 +45,19 @@ const CreateProducts = () => {
   const { data: brandsList } = useAllBrands();
   const categories = categorysList?.data?.data;
   const subcategories = subcategorysList?.data?.data;
+
+  const [selectedCategory, setSelectedCategory] = useState<string>("");
+
+  const filteredSubCategories = selectedCategory
+    ? subcategories?.filter(
+        (sub: TSubCategory) => sub.category._id === selectedCategory,
+      )
+    : [];
+
+  console.log("----subcategories-----", subcategories);
+  console.log("----selectedCategory-----", selectedCategory);
+  console.log("----filteredSubCategories-----", filteredSubCategories);
+
   const brands = brandsList?.data?.data;
 
   type ProductForm = {
@@ -197,13 +211,25 @@ const CreateProducts = () => {
       {/* Header */}
       <div className="flex items-center gap-3 pb-6 border-b border-gray-200">
         <div className="bg-blue-50 p-2.5 rounded-lg">
-          <svg className="w-5 h-5 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
+          <svg
+            className="w-5 h-5 text-blue-600"
+            fill="none"
+            stroke="currentColor"
+            viewBox="0 0 24 24"
+          >
+            <path
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              strokeWidth={2}
+              d="M12 6v6m0 0v6m0-6h6m-6 0H6"
+            />
           </svg>
         </div>
         <div>
           <h2 className="text-xl font-bold text-gray-900">Create Product</h2>
-          <p className="text-sm text-gray-500">Add a new product to your inventory</p>
+          <p className="text-sm text-gray-500">
+            Add a new product to your inventory
+          </p>
         </div>
       </div>
 
@@ -225,7 +251,7 @@ const CreateProducts = () => {
               required
               inputstyle="w-full rounded-lg border-gray-300 focus:ring-2 focus:ring-blue-500 focus:border-transparent"
             />
-            
+
             <div>
               <p className="text-sm font-medium text-gray-700 pb-2">
                 Product Description <span className="text-red-500">*</span>
@@ -234,7 +260,10 @@ const CreateProducts = () => {
                 name="description"
                 control={control}
                 render={({ field }) => (
-                  <RichTextEditor value={field.value} onChange={field.onChange} />
+                  <RichTextEditor
+                    value={field.value}
+                    onChange={field.onChange}
+                  />
                 )}
               />
             </div>
@@ -260,7 +289,10 @@ const CreateProducts = () => {
 
           <div className="bg-gray-50 rounded-lg p-4 space-y-3">
             {specificationFields.map((field, index) => (
-              <div key={field.id} className="flex flex-col sm:flex-row gap-3 items-start sm:items-end bg-white p-3 rounded-lg border border-gray-200">
+              <div
+                key={field.id}
+                className="flex flex-col sm:flex-row gap-3 items-start sm:items-end bg-white p-3 rounded-lg border border-gray-200"
+              >
                 <div className="flex-1 w-full">
                   <InputField
                     label="Key"
@@ -398,6 +430,10 @@ const CreateProducts = () => {
                 label: category.categoryName,
                 value: category._id,
               }))}
+              onValueChange={(value) => {
+                setSelectedCategory(value); // ✅ Update selected category
+                setValue("subCategory", ""); // ✅ Clear previous subcategory
+              }}
               control={control}
               error={errors.category}
               required
@@ -406,10 +442,17 @@ const CreateProducts = () => {
             <SelectInput<ProductForm>
               label="Sub-Category"
               name="subCategory"
-              options={subcategories?.map((subcategory: TSubCategory) => ({
-                label: subcategory.subcategoryName,
-                value: subcategory._id,
-              }))}
+              disabled={!selectedCategory}
+              options={filteredSubCategories?.map(
+                (subcategory: TSubCategory) => ({
+                  label: subcategory.subcategoryName,
+                  value: subcategory._id,
+                }),
+              )}
+              onValueChange={(value) => {
+                setSelectedCategory(value);
+                
+              }}
               control={control}
               error={errors.subCategory}
               inputstyle="rounded-lg !w-full !h-[42px] border-gray-300 focus:ring-2 focus:ring-blue-500 focus:border-transparent"
@@ -501,9 +544,25 @@ const CreateProducts = () => {
           >
             {isPending ? (
               <span className="flex items-center justify-center gap-2">
-                <svg className="animate-spin h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-                  <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
-                  <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                <svg
+                  className="animate-spin h-5 w-5 text-white"
+                  xmlns="http://www.w3.org/2000/svg"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                >
+                  <circle
+                    className="opacity-25"
+                    cx="12"
+                    cy="12"
+                    r="10"
+                    stroke="currentColor"
+                    strokeWidth="4"
+                  ></circle>
+                  <path
+                    className="opacity-75"
+                    fill="currentColor"
+                    d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+                  ></path>
                 </svg>
                 Creating Product...
               </span>
