@@ -99,3 +99,22 @@ export type TMeta = {
   total: number;
   totalPage: number;
 };
+
+export type TCoupon = {
+  _id: string;
+  code: string;
+  discount: number;
+  discountType: string;
+  useLimit: number;
+  used: number;
+  perUserLimit: number;
+  startDate: string;
+  expireDate: string;
+  couponType: string;
+  categoryID?: TCategory;
+  brandID?: TBrand;
+  subCategoryID?: TSubCategory;
+  isActive: boolean;
+  createdAt: string;
+  updatedAt: string;
+};
