@@ -3,68 +3,76 @@
 
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import { BASE_URL } from "@/config";
-import { useUpdateCategory } from "@/hooks/category.hook";
+import { useUpdateampaign } from "@/hooks/campaign.hook";
+import { useAllCoupons } from "@/hooks/coupon.hook";
 import ImageUpload from "@/reuseble_components/ImageUpload";
 import InputField from "@/reuseble_components/InputField";
-import { SquarePen, X } from "lucide-react";
-import { useState } from "react";
+import SelectInput from "@/reuseble_components/SelectInput";
+import { TCampaign, TCoupon } from "@/types";
+import { SquarePen } from "lucide-react";
 
+import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 
+interface EditCampaingProps {
+  compain: TCampaign;
+}
+
 type EditFormData = {
-  categoryName: string;
+  _id:string;
   title: string;
+  couponId: string;
   image: FileList;
 };
 
-interface EditCategoryProps {
-  category: {
-    _id: string;
-    categoryName: string;
-    title: string;
-    image: string;
-  };
-}
+const EditCampaing = ({ compain }: EditCampaingProps) => {
+  const { data: couponList } = useAllCoupons();
 
-const EditCategory = ({ category }: EditCategoryProps) => {
+  const coupons = couponList?.data;
   const [open, setOpen] = useState(false);
   const {
     register,
     handleSubmit,
     reset,
+    control,
     watch,
     formState: { errors },
   } = useForm<EditFormData>();
 
-  const { mutate, isPending } = useUpdateCategory();
+  const { mutate, isPending } = useUpdateampaign();
 
   const onSubmit = (data: EditFormData) => {
     const formData = new FormData();
-    formData.append("categoryName", data.categoryName);
     formData.append("title", data.title);
+   if (data.couponId) {
+  formData.append("couponId", data.couponId);
+}
 
     if (data.image && data.image.length > 0) {
       formData.append("image", data.image[0]);
     }
 
     mutate(
-      { id: category._id, formData },
+      { id: compain._id, formData },
       {
         onSuccess: (res) => {
-          toast.success(res?.message || "Category updated successfully");
+          toast.success(res?.message || "Campaing updated successfully");
           reset();
           setOpen(false);
         },
         onError: (error: any) => {
           toast.error(
             error?.response?.data?.message ??
-              "Something went wrong. Please try again."
+              "Something went wrong. Please try again.",
           );
         },
-      }
+      },
     );
   };
+
+console.log("svggggggggggggggg---id-----",compain._id)
+
 
   return (
     <div>
@@ -74,54 +82,56 @@ const EditCategory = ({ category }: EditCategoryProps) => {
             <SquarePen size={16} />
           </button>
         </SheetTrigger>
-        
+
         <SheetContent className="!max-w-2xl p-0">
           {/* Header */}
           <div className="flex items-center justify-between border-b border-gray-200 px-6 py-4 bg-white">
             <div>
-              <h2 className="text-lg font-semibold text-gray-900">Edit Category</h2>
-              <p className="text-sm text-gray-500">Update category information</p>
+              <h2 className="text-lg font-semibold text-gray-900">
+                Edit Campaing
+              </h2>
+              <p className="text-sm text-gray-500">Update campaing information</p>
             </div>
-            
           </div>
 
           {/* Form */}
           <form onSubmit={handleSubmit(onSubmit)} className="p-6 space-y-6">
-            {/* Current Category Preview */}
-            
-
             {/* Form Fields */}
             <div className="space-y-4">
               <InputField
-                label="Category Name"
-                name="categoryName"
-                type="text"
-                placeholder={category.categoryName}
-                register={register}
-                error={errors.categoryName}
-                inputstyle="w-full rounded-lg border-gray-300 focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200"
-              />
-              
-              <InputField
-                label="Category Title"
+                label="CampaingList Title"
                 name="title"
                 type="text"
-                placeholder={category.title}
+                placeholder={compain.title}
                 register={register}
                 error={errors.title}
                 inputstyle="w-full rounded-lg border-gray-300 focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200"
               />
 
               <div>
+                {" "}
+                <SelectInput<EditFormData>
+                  label="Coupon"
+                  name="couponId"
+                  options={coupons?.map((coupon: TCoupon) => ({
+                    label: coupon.code,
+                    value: coupon._id,
+                  }))}
+                  control={control}
+                  placeholder={compain.couponId.code}
+                  error={errors.couponId}
+                  inputstyle="rounded-lg !w-full !h-[42px] border-gray-300 focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                />
                 <ImageUpload
-                  label="Category Image"
+                  label="Image"
                   name="image"
-                  existingImage={BASE_URL + category.image}
+                  existingImage={
+                    compain?.image ? BASE_URL + compain.image : undefined
+                  }
                   watch={watch}
                   register={register}
                   error={errors.image}
                 />
-                <p className="text-xs text-gray-400 mt-1">Leave empty to keep current image</p>
               </div>
             </div>
 
@@ -141,14 +151,30 @@ const EditCategory = ({ category }: EditCategoryProps) => {
               >
                 {isPending ? (
                   <span className="flex items-center gap-2">
-                    <svg className="animate-spin h-4 w-4 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-                      <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
-                      <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                    <svg
+                      className="animate-spin h-4 w-4 text-white"
+                      xmlns="http://www.w3.org/2000/svg"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                    >
+                      <circle
+                        className="opacity-25"
+                        cx="12"
+                        cy="12"
+                        r="10"
+                        stroke="currentColor"
+                        strokeWidth="4"
+                      ></circle>
+                      <path
+                        className="opacity-75"
+                        fill="currentColor"
+                        d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+                      ></path>
                     </svg>
                     Updating...
                   </span>
                 ) : (
-                  "Update Category"
+                  "Update Brand"
                 )}
               </button>
             </div>
@@ -159,4 +185,4 @@ const EditCategory = ({ category }: EditCategoryProps) => {
   );
 };
 
-export default EditCategory;
+export default EditCampaing;

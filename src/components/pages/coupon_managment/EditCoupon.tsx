@@ -2,17 +2,17 @@
 "use client";
 
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
-import { BASE_URL } from "@/config";
+
 import { useAllBrands } from "@/hooks/brand.hook";
 import { useAllCategories } from "@/hooks/category.hook";
 import { useUpdateCoupon } from "@/hooks/coupon.hook";
 import { useAllSubCategories } from "@/hooks/subCategory.hook";
 
-import ImageUpload from "@/reuseble_components/ImageUpload";
+
 import InputField from "@/reuseble_components/InputField";
 import SelectInput from "@/reuseble_components/SelectInput";
 import { TBrand, TCategory, TCoupon, TSubCategory } from "@/types";
-import { SquarePen, X } from "lucide-react";
+import { SquarePen} from "lucide-react";
 import { useState } from "react";
 
 import { useForm } from "react-hook-form";

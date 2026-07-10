@@ -118,3 +118,10 @@ export type TCoupon = {
   createdAt: string;
   updatedAt: string;
 };
+
+export type TCampaign = {
+  _id: string;
+  title: string;
+  image?: string;
+  couponId: TCoupon;
+};
