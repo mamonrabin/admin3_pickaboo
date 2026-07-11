@@ -50,7 +50,7 @@ const ProductSelector: React.FC<ProductProps> = ({
 
   const dates = [
     { label: "Today", value: "today" },
-    { label: "Tomorrow", value: "tomorrow" },
+    { label: "yesterday", value: "yesterday" },
     { label: "This Week", value: "this-week" },
     { label: "This Month", value: "this-month" },
     { label: "This Year", value: "this-year" },

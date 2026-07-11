@@ -125,3 +125,23 @@ export type TCampaign = {
   image?: string;
   couponId: TCoupon;
 };
+
+export type TAuth = {
+  provider: string;
+  providerId: string;
+};
+
+export type TUser = {
+  _id: string;
+  name: string;
+  email: string;
+  address: string;
+  isActive: string;
+  password: string;
+  phone: string;
+  image: string;
+  picture: string;
+  auths: TAuth[];
+  role: string;
+  createdAt: string;
+};
