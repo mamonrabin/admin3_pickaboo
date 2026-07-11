@@ -145,3 +145,13 @@ export type TUser = {
   role: string;
   createdAt: string;
 };
+
+export type TBanner = {
+  _id: string;
+  title?: string;
+  category?: TCategory;
+  image: string;
+  description?: string;
+  link?: string;
+  type: string;
+};
