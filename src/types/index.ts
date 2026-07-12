@@ -162,3 +162,8 @@ export type TPolicy = {
   description: string;
   type: string;
 };
+export type TAbout = {
+   _id: string;
+  description: string;
+  type: string;
+};

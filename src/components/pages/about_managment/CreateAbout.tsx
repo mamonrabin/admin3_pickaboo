@@ -2,43 +2,40 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
 
-import InputField from "@/reuseble_components/InputField";
+
 import { Controller, SubmitHandler, useForm } from "react-hook-form";
 
 import { Plus } from "lucide-react";
-import SelectInput from "@/reuseble_components/SelectInput";
-import { toast } from "sonner";
-import { useCreatePolicy } from "@/hooks/policy.hook";
-import RichTextEditor from "@/reuseble_components/RichTextEditor";
 
-const policyTypes = [
-  { label: "privacy", value: "privacy" },
-  { label: "condition", value: "condition" },
-  { label: "return", value: "return" },
-  { label: "order", value: "order" },
-  { label: "shipping", value: "shipping" },
+import { toast } from "sonner";
+
+import RichTextEditor from "@/reuseble_components/RichTextEditor";
+import { useCreateAbout } from "@/hooks/about.hook";
+import SelectInput from "@/reuseble_components/SelectInput";
+
+const aboutTypes = [
+  { label: "Active", value: "active" },
+  { label: "In Active", value: "inactive" },
 ];
 
-type PolicyFormData = {
-  title: string;
+
+type AboutFormData = {
+type:string
   description: string;
-  type: string;
+ 
 };
 
-const CreatePolicy = () => {
+const CreateAbout = () => {
   const {
-    register,
     handleSubmit,
     control,
     reset,
-    formState: { errors },
-  } = useForm<PolicyFormData>();
+  } = useForm<AboutFormData>();
 
-  const { mutate, isPending } = useCreatePolicy();
+  const { mutate, isPending } = useCreateAbout();
 
-  const onSubmit: SubmitHandler<PolicyFormData> = (data) => {
+  const onSubmit: SubmitHandler<AboutFormData> = (data) => {
     const payload = {
-      title: data.title,
       description: data.description,
       type: data.type,
      
@@ -77,38 +74,19 @@ const CreatePolicy = () => {
           </svg>
         </div>
         <div>
-          <h2 className="text-xl font-bold text-gray-900">Create Policy</h2>
+          <h2 className="text-xl font-bold text-gray-900">Create About</h2>
           <p className="text-sm text-gray-500">
-            Add a new policy to your store
+            Add a new about to your store
           </p>
         </div>
       </div>
 
       <form onSubmit={handleSubmit(onSubmit)} className="pt-6">
-        <div className="grid md:grid-cols-2 md:gap-4 gap-2">
-          <InputField
-            label="Policy Title"
-            name="title"
-            type="text"
-            placeholder="Enter Title"
-            register={register}
-            error={errors.title}
-            required
-            inputstyle="w-full rounded border-gray-300 focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200"
-          />
+        
 
-          <SelectInput<PolicyFormData>
-            label="Policy Type"
-            name="type"
-            options={policyTypes}
-            control={control}
-            error={errors.type}
-            required
-            inputstyle="rounded lg:mt-1 !w-full !h-[40px] border-gray-300 focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-          />
-        </div>
+          
 
-        <div className="mt-4">
+        <div className="mt-4 flex flex-col gap-4">
           <p className="text-sm font-medium text-gray-700 pb-2">
             Description <span className="text-red-500">*</span>
           </p>
@@ -119,7 +97,17 @@ const CreatePolicy = () => {
               <RichTextEditor value={field.value} onChange={field.onChange} />
             )}
           />
+
+          <SelectInput<AboutFormData>
+            label="About Type"
+            name="type"
+            options={aboutTypes}
+            control={control}
+            inputstyle="rounded lg:mt-1 !w-full !h-[40px] border-gray-300 focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+          />
         </div>
+
+         
 
         
 
@@ -162,7 +150,7 @@ const CreatePolicy = () => {
             ) : (
               <>
                 <Plus size={18} />
-                Create Policy
+                Create About
               </>
             )}
           </button>
@@ -172,4 +160,4 @@ const CreatePolicy = () => {
   );
 };
 
-export default CreatePolicy;
+export default CreateAbout;
