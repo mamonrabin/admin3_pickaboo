@@ -167,3 +167,10 @@ export type TAbout = {
   description: string;
   type: string;
 };
+export type TContact = {
+   _id: string;
+  name: string;
+  email: string;
+  phone: string;
+  message: string;
+};
