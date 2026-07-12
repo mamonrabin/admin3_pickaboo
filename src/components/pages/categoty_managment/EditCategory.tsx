@@ -6,7 +6,7 @@ import { BASE_URL } from "@/config";
 import { useUpdateCategory } from "@/hooks/category.hook";
 import ImageUpload from "@/reuseble_components/ImageUpload";
 import InputField from "@/reuseble_components/InputField";
-import { SquarePen, X } from "lucide-react";
+import { SquarePen} from "lucide-react";
 import { useState } from "react";
 
 import { useForm } from "react-hook-form";

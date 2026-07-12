@@ -155,3 +155,10 @@ export type TBanner = {
   link?: string;
   type: string;
 };
+
+export type TPolicy = {
+   _id: string;
+  title: string;
+  description: string;
+  type: string;
+};

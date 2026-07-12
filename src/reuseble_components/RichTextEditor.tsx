@@ -33,6 +33,7 @@ import {
 type RichTextEditorProps = {
   value?: string;
   onChange?: (value: string) => void;
+
 };
 
 export default function RichTextEditor({

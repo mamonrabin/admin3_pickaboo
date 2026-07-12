@@ -2,86 +2,69 @@
 "use client";
 
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
-import { BASE_URL } from "@/config";
-import { useUpdateBanner } from "@/hooks/banner.hook";
-import { useAllCategories} from "@/hooks/category.hook";
-import ImageUpload from "@/reuseble_components/ImageUpload";
+import { useUpdatePolicy } from "@/hooks/policy.hook";
+
+
+
 import InputField from "@/reuseble_components/InputField";
+import RichTextEditor from "@/reuseble_components/RichTextEditor";
 import SelectInput from "@/reuseble_components/SelectInput";
-import { TBanner, TCategory } from "@/types";
+import { TPolicy } from "@/types";
 import { SquarePen } from "lucide-react";
 import { useState } from "react";
 
-import { useForm } from "react-hook-form";
+import { Controller, useForm } from "react-hook-form";
 import { toast } from "sonner";
 
-const BannerType = [
-  { label: "Main", value: "Main" },
-  { label: "Offer", value: "Offer" },
-  { label: "Promotion", value: "Promotion" },
+const policyTypes = [
+  { label: "privacy", value: "privacy" },
+  { label: "condition", value: "condition" },
+  { label: "return", value: "return" },
+  { label: "order", value: "order" },
+  { label: "shipping", value: "shipping" },
 ];
 
 type EditFormData = {
   title: string;
   description: string;
-  category: string;
-  link: string;
   type: string;
-  image: FileList;
 };
 
-interface EditBannerProps {
-  banner: TBanner;
+interface EditPolicyProps {
+  policy: TPolicy;
 }
 
-const EditBanner = ({ banner }: EditBannerProps) => {
-  const { data: categorysList } = useAllCategories();
-
-  const categories = categorysList?.data?.data;
-
+const EditPolicy = ({ policy }: EditPolicyProps) => {
   const [open, setOpen] = useState(false);
   const {
     register,
     handleSubmit,
     reset,
-    watch,
     control,
     formState: { errors },
   } = useForm<EditFormData>();
 
-  const { mutate, isPending } = useUpdateBanner();
+  const { mutate, isPending } = useUpdatePolicy();
 
   const onSubmit = (data: EditFormData) => {
-    const formData = new FormData();
+     const payload: Partial<EditFormData> = {};
 
     if (data.title) {
-      formData.append("title", data.title);
+      payload.title = data.title;
     }
+
     if (data.description) {
-      formData.append("description", data.description);
+      payload.description = data.description;
     }
-
-    if (data.category) {
-      formData.append("category", data.category);
-    }
-
     if (data.type) {
-      formData.append("type", data.type);
-    }
-
-    if (data.link) {
-      formData.append("link", data.link);
-    }
-
-    if (data.image && data.image.length > 0) {
-      formData.append("image", data.image[0]);
+      payload.type = data.type;
     }
 
     mutate(
-      { id: banner._id, formData },
+      { id: policy._id, payload: payload as EditFormData },
       {
         onSuccess: (res) => {
-          toast.success(res?.message || "Category updated successfully");
+          toast.success(res?.message || "policy updated successfully");
           reset();
           setOpen(false);
         },
@@ -104,14 +87,14 @@ const EditBanner = ({ banner }: EditBannerProps) => {
           </button>
         </SheetTrigger>
 
-        <SheetContent className="!max-w-2xl p-0">
+        <SheetContent className="!max-w-2xl p-0 overflow-y-scroll">
           {/* Header */}
           <div className="flex items-center justify-between border-b border-gray-200 px-6 py-4 bg-white">
             <div>
               <h2 className="text-lg font-semibold text-gray-900">
-                Edit Banner
+                Edit Policy
               </h2>
-              <p className="text-sm text-gray-500">Update banner information</p>
+              <p className="text-sm text-gray-500">Update policy information</p>
             </div>
           </div>
 
@@ -122,73 +105,40 @@ const EditBanner = ({ banner }: EditBannerProps) => {
             {/* Form Fields */}
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6 w-full">
               <InputField
-                label="Banner Title"
+                label="Policy Title"
                 name="title"
                 type="text"
-                placeholder={banner.title || "N/A"}
+                placeholder={policy.title || "N/A"}
                 register={register}
                 error={errors.title}
                 inputstyle="rounded !w-full !h-[42px] border-gray-300 focus:ring-2 focus:ring-blue-500 focus:border-transparent"
               />
 
               <SelectInput<EditFormData>
-                label="Banner Type"
+                label="Policy Type"
                 name="type"
-                options={BannerType}
+                options={policyTypes}
                 control={control}
-                placeholder={banner.type || "N/A"}
+                placeholder={policy.type || "N/A"}
                 error={errors.type}
-                inputstyle="rounded !w-full !h-[42px] border-gray-300 focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-              />
-
-              {/* Category Select */}
-
-              <SelectInput<EditFormData>
-                label="Category"
-                name="category"
-                options={categories?.map((category: TCategory) => ({
-                  label: category.categoryName,
-                  value: category._id,
-                }))}
-                control={control}
-                placeholder={banner.category?.categoryName || "N/A"}
-                error={errors.category}
-                inputstyle="rounded !w-full !h-[42px] border-gray-300 focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-              />
-
-              <InputField
-                label="Banner Link"
-                name="title"
-                type="text"
-                placeholder={banner.link || "N/A"}
-                register={register}
-                error={errors.title}
                 inputstyle="rounded !w-full !h-[42px] border-gray-300 focus:ring-2 focus:ring-blue-500 focus:border-transparent"
               />
             </div>
 
-            <div className="flex md:flex-row flex-col items-center gap-2 w-full mt-4">
-              <ImageUpload
-                label="Banner Image"
-                name="image"
-                watch={watch}
-                 existingImage={BASE_URL + banner.image || "N/A"}
-                register={register}
-                error={errors.image}
+            <div className="mt-4">
+              <p className="text-sm font-medium text-gray-700 pb-2">
+                Description
+              </p>
+              <Controller
+                name="description"
+                control={control}
+                render={({ field }) => (
+                  <RichTextEditor
+                    value={field.value}
+                    onChange={field.onChange}
+                  />
+                )}
               />
-
-              <div className="w-full flex flex-col gap-1">
-                <label className="text-sm font-medium">
-                  Banner Description
-                </label>
-                <textarea
-                  className="px-4 py-2 w-full border outline-none text-sm rounded-lg"
-                  {...register("description")}
-                  cols={10}
-                  rows={6}
-                  placeholder={banner.description || "N/A"}
-                ></textarea>
-              </div>
             </div>
 
             {/* Action Buttons */}
@@ -230,7 +180,7 @@ const EditBanner = ({ banner }: EditBannerProps) => {
                     Updating...
                   </span>
                 ) : (
-                  "Update Banner"
+                  "Update Policy"
                 )}
               </button>
             </div>
@@ -241,4 +191,4 @@ const EditBanner = ({ banner }: EditBannerProps) => {
   );
 };
 
-export default EditBanner;
+export default EditPolicy;
