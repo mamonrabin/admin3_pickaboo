@@ -174,3 +174,9 @@ export type TContact = {
   phone: string;
   message: string;
 };
+export type TSocial = {
+   _id: string;
+  link: string;
+  type: string;
+
+};
