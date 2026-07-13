@@ -180,3 +180,15 @@ export type TSocial = {
   type: string;
 
 };
+
+export type TLogo = {
+   _id: string;
+  headerLogo: string;
+  footerLogo: string;
+  description: string;
+  address: string;
+  phone: string;
+  whatsapp: string;
+  email: string;
+  type: string;
+};

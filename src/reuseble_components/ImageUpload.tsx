@@ -20,6 +20,7 @@ type ImageUploadProps<T extends FieldValues> = {
   error?: FieldError;
   required?: boolean;
   existingImage?: string;
+  uploaderSyle?:string
 };
 
 const ImageUpload = <T extends FieldValues>({
@@ -30,6 +31,7 @@ const ImageUpload = <T extends FieldValues>({
   error,
   required = false,
   existingImage,
+  uploaderSyle
 }: ImageUploadProps<T>) => {
   const inputId = useId();
 
@@ -63,7 +65,7 @@ const ImageUpload = <T extends FieldValues>({
   });
 
   return (
-    <div className="flex w-full max-w-xs flex-col gap-2">
+    <div className={`flex w-full max-w-xs flex-col gap-2 ${uploaderSyle}`}>
       <label className="text-sm font-medium">
         {label}
         {required && <span className="ml-1 text-red-500">*</span>}
