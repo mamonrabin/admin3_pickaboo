@@ -192,3 +192,11 @@ export type TLogo = {
   email: string;
   type: string;
 };
+export type TReview = {
+   _id: string;
+  userID: TUser;
+  productID: TProduct;
+  rating: number;
+  comment: string;
+  type: string;
+};
