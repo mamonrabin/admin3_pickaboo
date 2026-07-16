@@ -1,0 +1,58 @@
+import {
+  deleteOrder,
+  getAllOrders,
+  getOrders,
+  orderFilter,
+  updateOrder,
+} from "@/services/order.api";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+
+export const useOrders = () => {
+  return useQuery({
+    queryKey: ["all-orders"],
+    queryFn: getOrders,
+  });
+};
+
+export const useAllOrders = ({
+  page = 1,
+  limit = 10,
+  paymentMethod,
+  paymentStatus,
+  status,
+  dateFilter,
+}: orderFilter) => {
+  return useQuery({
+    queryKey: ["orders", page, limit,paymentMethod,paymentStatus,status, dateFilter],
+    queryFn: () => getAllOrders({ page, limit,paymentMethod, paymentStatus,status, dateFilter }),
+    placeholderData: (previousData) => previousData,
+  });
+};
+
+export const useDeleteOrder = () => {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: (id: string) => deleteOrder(id),
+
+    onSuccess: () => {
+      queryClient.invalidateQueries({
+        queryKey: ["orders"],
+      });
+    },
+  });
+};
+
+export const useUpdateOrder = () => {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: updateOrder,
+
+    onSuccess: () => {
+      queryClient.invalidateQueries({
+        queryKey: ["orders"],
+      });
+    },
+  });
+};

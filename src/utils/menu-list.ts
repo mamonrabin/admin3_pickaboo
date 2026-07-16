@@ -18,16 +18,18 @@ export function getMenuList(pathname: string): TGroup[] {
       menus: [
         {
           href: "/dashboard",
-          label: "Dashboard",
+          label: "Overview",
           active: pathname.includes("/dashboard"),
           icon: LayoutGrid,
           submenus: [],
         },
-      ],
-    },
-    {
-      groupLabel: "Management",
-      menus: [
+        {
+          href: "/new_order",
+          label: "New Orders",
+          active: pathname.includes("/new_order"),
+          icon: ShoppingCart,
+          submenus: [],
+        },
         {
           href: "/order-list",
           label: "Orders",
@@ -35,7 +37,12 @@ export function getMenuList(pathname: string): TGroup[] {
           icon: ShoppingCart,
           submenus: [],
         },
-
+      ],
+    },
+    {
+      groupLabel: "Management",
+      menus: [
+       
         {
           href: "/category",
           label: "Category",
@@ -103,18 +110,18 @@ export function getMenuList(pathname: string): TGroup[] {
         },
         {
           href: "/user",
-          label: "User",
+          label: "Customer",
           active: pathname.includes("/user"),
           icon: FlameKindling,
           submenus: [],
         },
-        {
-          href: "/payment",
-          label: "Payment",
-          active: pathname.includes("/payment"),
-          icon: FlameKindling,
-          submenus: [],
-        },
+        // {
+        //   href: "/payment",
+        //   label: "Payment",
+        //   active: pathname.includes("/payment"),
+        //   icon: FlameKindling,
+        //   submenus: [],
+        // },
       ],
     },
     {

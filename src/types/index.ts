@@ -89,7 +89,7 @@ export type TProduct = {
   quantity?: number;
   slug?: string;
   sku?: string;
-  price: number;
+  price?: number;
   availableQuantity?: number;
 };
 
@@ -199,4 +199,73 @@ export type TReview = {
   rating: number;
   comment: string;
   type: string;
+};
+
+
+
+export type TOrderProduct = {
+  productRef: TProduct;
+  quantity: number;
+  price: number;
+  color?: string;
+  size?: string;
+  _id?: string;
+};
+
+export type TPaymentInfo = {
+  method: string;
+  transactionId?: string;
+  paymentStatus: string;
+  paidAt?: string;
+};
+
+export type TDeliveryInfo = {
+  courierName?: string;
+  trackingNumber?: string;
+  estimatedDeliveryDate?: string;
+  deliveredAt?: string;
+};
+
+export type TShippingAddress = {
+  name?:string;
+  email?:string;
+  phone?:string;
+  address?:string;
+  house?:string;
+  road?:string;
+  thana?:string;
+  altPhone?:string;
+  city?:string;
+}
+
+export type TOrder = {
+  _id: string;
+  orderId: string;
+  userRef?: TUser;
+  isGuestOrder: boolean;
+  products: TOrderProduct[];
+  subTotalPrice: number;
+  discountAmount?: number;
+  shippingCost: number;
+  totalPrice: number;
+  couponRef?: TCoupon;
+  shippingAddress:TShippingAddress;
+  payment: TPaymentInfo;
+  paymentMethod?: string;
+  name: string;
+  phone: string;
+  email?: string;
+  city: string;
+  address: string;
+  house?: string;
+  road?: string;
+  thana?: string;
+  postalCode?: string;
+  status: string;
+  deliveryInfo?: TDeliveryInfo;
+  note?: string;
+  paymentStatus?: string;
+  createdAt?: string;
+  updatedAt?: string;
+  discount?: string;
 };

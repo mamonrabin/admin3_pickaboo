@@ -10,15 +10,15 @@ import {
   TableRow,
 } from "@/components/ui/table";
 
-import Image from "next/image";
-import { Trash, Edit, Package } from "lucide-react";
+
+import { Trash, Package } from "lucide-react";
 import Pagination from "@/reuseble_components/Paginations";
 // import EditBrand from "./EditBrand";
 import { useState } from "react";
 
-import { BASE_URL } from "@/config";
 
-import { TBrand, TCoupon } from "@/types";
+
+import { TCoupon } from "@/types";
 import TableSkeleton from "@/reuseble_components/TableSkeleton";
 import { toast } from "sonner";
 import { useCoupons, useDeleteCoupon } from "@/hooks/coupon.hook";
