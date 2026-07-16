@@ -4,7 +4,7 @@
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import { BASE_URL } from "@/config";
 import { TProduct } from "@/types";
-import { Ellipsis } from "lucide-react";
+import { Ellipsis, X } from "lucide-react";
 import Image from "next/image";
 import React from "react";
 
@@ -43,14 +43,11 @@ const ProductDescription: React.FC<productDescriptionProps> = ({ product }) => {
     metaDescription,
   } = product;
 
-  // const allImages = [thumbnailImage, backviewImage, ...images];
   const allImages = [
     thumbnailImage,
     ...(backviewImage ? [backviewImage] : []),
     ...(images ?? []),
   ];
-
-  console.log("-------------------------images----------------", allImages);
 
   return (
     <div>
@@ -58,171 +55,28 @@ const ProductDescription: React.FC<productDescriptionProps> = ({ product }) => {
         <SheetTrigger className="ml-8 cursor-pointer">
           <Ellipsis size={16} />
         </SheetTrigger>
-        {/* <SheetContent className="lg:!max-w-4xl !w-full !max-w-full  md:p-12 p-8 overflow-y-scroll">
-          <div className="">
-            <p className="text-lg font-medium capitalize"><span className="text-sm">Product Title : </span>
-              {title}</p>
-            <p
-              dangerouslySetInnerHTML={{
-                __html: description,
-              }}
-            />
 
-            <p>
-              <span>Product Specifications : </span>
-              {specifications
-                ? specifications?.map((item, index) => (
-                    <p key={index}>
-                      <span>{item.key}</span> <span>{item.value}</span>
-                    </p>
-                  ))
-                : "N/A"}
-            </p>
-            <p>
-              <span>Product Tags : </span> {tags ? tags : "N/A"}
-            </p>
-            <p>
-              {" "}
-              <span>Product SKU : </span>
-              {sku}
-            </p>
+        <SheetContent className="lg:!max-w-4xl !w-full !max-w-full p-0 bg-gray-50/50 overflow-y-scroll">
+          {/* Sticky Header */}
+          <div className="sticky top-0 z-10 bg-white border-b border-gray-200 px-6 py-4 flex items-center justify-between">
             <div>
-              <p>
-                {" "}
-                <span>MRP Price : </span>
-                {mrpPrice}
-              </p>
-              <p>
-                <span>Discount Type : </span>{" "}
-                {discountType ? discountType : "N/A"}
-              </p>
-              <p>
-                <span>Discount : </span> {discount}
-              </p>
-              <p>
-                <span>Price : </span> {price}
-              </p>
+              <h2 className="text-lg font-bold text-gray-900">Product Details</h2>
+              <p className="text-sm text-gray-500">View complete product information</p>
             </div>
-            <div>
-              <p>
-                {" "}
-                <span>Totla Quantity : </span>
-                {quantity}
-              </p>
-              <p>
-                <span>Sold Quantity : </span> {soldQuantity}
-              </p>
-              <p>
-                <span>Available Quantity : </span> {availableQuantity}
-              </p>
-            </div>
-
-            <div>
-              <p>
-                {" "}
-                <span>Shipping : </span>
-                {freeShipping ? freeShipping : "N/A"}
-              </p>
-              <p>
-                <span>Product Label : </span> {label ? label : "N/A"}
-              </p>
-              <p>
-                <span>Stock Status : </span>{" "}
-                {stock_status ? stock_status : "N/A"}
-              </p>
-            </div>
-
-            <div>
-              <p>Images</p>
-              <div className="flex items-center gap-2">
-                {allImages?.map((image, index) => (
-                  <Image
-                    key={index}
-                    src={`${BASE_URL}${image}`}
-                    alt={`Product image ${index + 1}`}
-                    width={100}
-                    height={100}
-                    className="object-cover"
-                    unoptimized
-                  />
-                ))}
-              </div>
-            </div>
-
-            <div>
-              <p>
-                <span>Inventory Type : </span> {inventoryType}
-              </p>
-              <div className="flex items-center flex-wrap gap-2">
-                {inventories?.map((item) => (
-                  <div
-                    key={item._id}
-                    className="bg-secondary shadow-xs hover:shadow-md duration-300 border rounded p-3 text-[13px] font-medium"
-                  >
-                    <p>Size: {item.size}</p>
-                    <p>Color: {item.colorName}</p>
-                    <p>Quantity: {item.quantity}</p>
-                    <div className="mt-2 flex flex-col gap-0.5">
-                      <p>Sold Quantity: {item.soldQuantity || 0}</p>
-                      <p>Hold Quantity: {item.holdQuantity || 0}</p>
-                    </div>
-                  </div>
-                ))}
-              </div>
-            </div>
-
-            <div>
-              <p>
-                {" "}
-                <span>Category : </span>
-                {category.categoryName}
-              </p>
-              <p>
-                <span>Subcategory : </span>{" "}
-                {subCategory ? subCategory.subcategoryName : "N/A"}
-              </p>
-              <p>
-                <span>Brand : </span> {brand ? brand.title : "N/A"}
-              </p>
-            </div>
-            <div>
-              <p>
-                {" "}
-                <span>Average Rating : </span>
-                {averageRating}
-              </p>
-              <p>
-                <span>Total Reviews : </span> {totalReviews}
-              </p>
-            </div>
-            <div>
-              <p>
-                {" "}
-                <span>meta Title : </span>
-                products
-              </p>
-              <p>
-                <span>metaDescription : </span> metaDescription
-              </p>
-              <p>
-                <span>metaKeywords : </span> {metaKeywords || "products"}
-              </p>
-            </div>
-
-            <p>warranty : jgfjgfgf</p>
+            <button className="p-1.5 hover:bg-gray-100 rounded-lg transition-colors">
+              <X size={18} className="text-gray-500" />
+            </button>
           </div>
-        </SheetContent> */}
 
-        <SheetContent className="lg:!max-w-4xl !w-full !max-w-full md:p-8 p-6 overflow-y-scroll bg-gray-50/50">
-          <div className="space-y-8">
-            {/* Product Title Section */}
-            <div className="border-b border-gray-200 pb-4">
+          <div className="p-6 space-y-6">
+            {/* Product Title Section - White Background */}
+            <div className="bg-white rounded-lg p-5 border border-gray-200">
               <h2 className="text-2xl font-bold text-gray-900">{title}</h2>
               <p className="text-sm text-gray-500 mt-1">SKU: {sku}</p>
             </div>
 
             {/* Description */}
-            <div className="bg-white rounded-lg p-5 shadow-sm border border-gray-100">
+            <div className="bg-gray-50 rounded-lg p-5 border border-gray-200">
               <h3 className="text-sm font-semibold text-gray-700 uppercase tracking-wider mb-3">
                 Description
               </h3>
@@ -235,7 +89,7 @@ const ProductDescription: React.FC<productDescriptionProps> = ({ product }) => {
             {/* Key Information Grid */}
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               {/* Pricing Card */}
-              <div className="bg-white rounded-lg p-5 shadow-sm border border-gray-100">
+              <div className="bg-gray-50 rounded-lg p-5 border border-gray-200">
                 <h3 className="text-sm font-semibold text-gray-700 uppercase tracking-wider mb-3">
                   Pricing
                 </h3>
@@ -266,7 +120,7 @@ const ProductDescription: React.FC<productDescriptionProps> = ({ product }) => {
               </div>
 
               {/* Stock Card */}
-              <div className="bg-white rounded-lg p-5 shadow-sm border border-gray-100">
+              <div className="bg-gray-50 rounded-lg p-5 border border-gray-200">
                 <h3 className="text-sm font-semibold text-gray-700 uppercase tracking-wider mb-3">
                   Inventory
                 </h3>
@@ -299,7 +153,7 @@ const ProductDescription: React.FC<productDescriptionProps> = ({ product }) => {
 
             {/* Specifications */}
             {specifications && specifications.length > 0 && (
-              <div className="bg-white rounded-lg p-5 shadow-sm border border-gray-100">
+              <div className="bg-gray-50 rounded-lg p-5 border border-gray-200">
                 <h3 className="text-sm font-semibold text-gray-700 uppercase tracking-wider mb-3">
                   Specifications
                 </h3>
@@ -321,7 +175,7 @@ const ProductDescription: React.FC<productDescriptionProps> = ({ product }) => {
 
             {/* Tags & Labels */}
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <div className="bg-white rounded-lg p-5 shadow-sm border border-gray-100">
+              <div className="bg-gray-50 rounded-lg p-5 border border-gray-200">
                 <h3 className="text-sm font-semibold text-gray-700 uppercase tracking-wider mb-3">
                   Tags
                 </h3>
@@ -343,7 +197,7 @@ const ProductDescription: React.FC<productDescriptionProps> = ({ product }) => {
                 </div>
               </div>
 
-              <div className="bg-white rounded-lg p-5 shadow-sm border border-gray-100">
+              <div className="bg-gray-50 rounded-lg p-5 border border-gray-200">
                 <h3 className="text-sm font-semibold text-gray-700 uppercase tracking-wider mb-3">
                   Status
                 </h3>
@@ -374,7 +228,7 @@ const ProductDescription: React.FC<productDescriptionProps> = ({ product }) => {
 
             {/* Product Images */}
             {allImages && allImages.length > 0 && (
-              <div className="bg-white rounded-lg p-5 shadow-sm border border-gray-100">
+              <div className="bg-gray-50 rounded-lg p-5 border border-gray-200">
                 <h3 className="text-sm font-semibold text-gray-700 uppercase tracking-wider mb-3">
                   Images
                 </h3>
@@ -382,7 +236,7 @@ const ProductDescription: React.FC<productDescriptionProps> = ({ product }) => {
                   {allImages.map((image, index) => (
                     <div
                       key={index}
-                      className="aspect-square rounded-lg overflow-hidden border border-gray-200"
+                      className="aspect-square rounded-lg overflow-hidden border border-gray-200 bg-white"
                     >
                       <Image
                         src={`${BASE_URL}${image}`}
@@ -400,7 +254,7 @@ const ProductDescription: React.FC<productDescriptionProps> = ({ product }) => {
 
             {/* Inventory Details */}
             {inventories && inventories.length > 0 && (
-              <div className="bg-white rounded-lg p-5 shadow-sm border border-gray-100">
+              <div className="bg-gray-50 rounded-lg p-5 border border-gray-200">
                 <h3 className="text-sm font-semibold text-gray-700 uppercase tracking-wider mb-3">
                   Inventory Variants
                 </h3>
@@ -411,7 +265,7 @@ const ProductDescription: React.FC<productDescriptionProps> = ({ product }) => {
                   {inventories.map((item) => (
                     <div
                       key={item._id}
-                      className="bg-gray-50 rounded-lg p-4 border border-gray-200 hover:border-blue-400 transition-colors"
+                      className="bg-white rounded-lg p-4 border border-gray-200 hover:border-blue-400 transition-colors"
                     >
                       <div className="space-y-1.5">
                         <div className="flex justify-between items-center">
@@ -429,12 +283,14 @@ const ProductDescription: React.FC<productDescriptionProps> = ({ product }) => {
                         <div className="flex justify-between text-sm">
                           <span className="text-gray-600">Sold</span>
                           <span className="text-orange-600">
-                            {soldQuantity || 0}
+                            {item.soldQuantity || 0}
                           </span>
                         </div>
                         <div className="flex justify-between text-sm">
                           <span className="text-gray-600">Hold</span>
-                          <span className="text-yellow-600">0</span>
+                          <span className="text-yellow-600">
+                            {item.holdQuantity || 0}
+                          </span>
                         </div>
                       </div>
                     </div>
@@ -445,7 +301,7 @@ const ProductDescription: React.FC<productDescriptionProps> = ({ product }) => {
 
             {/* Category & Brand */}
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <div className="bg-white rounded-lg p-5 shadow-sm border border-gray-100">
+              <div className="bg-gray-50 rounded-lg p-5 border border-gray-200">
                 <h3 className="text-sm font-semibold text-gray-700 uppercase tracking-wider mb-3">
                   Category
                 </h3>
@@ -469,7 +325,7 @@ const ProductDescription: React.FC<productDescriptionProps> = ({ product }) => {
                 </div>
               </div>
 
-              <div className="bg-white rounded-lg p-5 shadow-sm border border-gray-100">
+              <div className="bg-gray-50 rounded-lg p-5 border border-gray-200">
                 <h3 className="text-sm font-semibold text-gray-700 uppercase tracking-wider mb-3">
                   Reviews
                 </h3>
@@ -493,7 +349,7 @@ const ProductDescription: React.FC<productDescriptionProps> = ({ product }) => {
             </div>
 
             {/* SEO Section */}
-            <div className="bg-white rounded-lg p-5 shadow-sm border border-gray-100">
+            <div className="bg-gray-50 rounded-lg p-5 border border-gray-200">
               <h3 className="text-sm font-semibold text-gray-700 uppercase tracking-wider mb-3">
                 SEO Settings
               </h3>
@@ -501,18 +357,20 @@ const ProductDescription: React.FC<productDescriptionProps> = ({ product }) => {
                 <div>
                   <p className="text-xs text-gray-500 mb-1">Meta Title</p>
                   <p className="text-sm font-medium text-gray-800">
-                    {metaTitle}
+                    {metaTitle || "N/A"}
                   </p>
                 </div>
                 <div>
                   <p className="text-xs text-gray-500 mb-1">Meta Description</p>
-                  <p className="text-sm text-gray-600">{metaDescription}</p>
+                  <p className="text-sm text-gray-600">
+                    {metaDescription || "N/A"}
+                  </p>
                 </div>
               </div>
             </div>
 
             {/* Additional Info */}
-            <div className="bg-gray-100/70 rounded-lg p-4 border border-gray-200">
+            <div className="bg-gray-50 rounded-lg p-4 border border-gray-200">
               <p className="text-sm text-gray-600">
                 <span className="font-semibold">Warranty:</span> jgfjgfgf
               </p>

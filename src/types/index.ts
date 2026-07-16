@@ -54,6 +54,8 @@ export type TInventory = {
   colorName?: string;
   size?: string;
   quantity: number;
+  soldQuantity?:string
+  holdQuantity?:string
 };
 
 export type TSpecification = {

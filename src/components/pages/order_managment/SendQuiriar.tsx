@@ -17,41 +17,38 @@ import { format } from "date-fns";
 import { TOrder } from "@/types";
 import { useState } from "react";
 import { toast } from "sonner";
+import { useCreateSteadfastParcel } from "@/hooks/courier.hook";
 
 interface SendQuiriarProps {
   order?: TOrder;
 }
 
 const SendQuiriar = ({ order }: SendQuiriarProps) => {
-  const [isSending, setIsSending] = useState(false);
-
-  //   const getStatusColor = (status?: string) => {
-  //     const colors: Record<string, string> = {
-  //       PENDING: "bg-yellow-100 text-yellow-800",
-  //       CONFIRMED: "bg-blue-100 text-blue-800",
-  //       PROCESSING: "bg-purple-100 text-purple-800",
-  //       SHIPPED: "bg-indigo-100 text-indigo-800",
-  //       DELIVERED: "bg-green-100 text-green-800",
-  //       CANCELLED: "bg-red-100 text-red-800",
-  //       ON_HOLD: "bg-orange-100 text-orange-800",
-  //       IN_REVIEW: "bg-gray-100 text-gray-800",
-  //       RETURNED: "bg-pink-100 text-pink-800",
-  //     };
-  //     return status ? colors[status] || "bg-gray-100 text-gray-800" : "bg-gray-100 text-gray-800";
-  //   };
+  const { mutate: sendCourier, isPending: isSending } =
+    useCreateSteadfastParcel();
+  const [open, setOpen] = useState(false);
 
   const handleSendToCourier = () => {
-    setIsSending(true);
-    // Simulate API call
-    setTimeout(() => {
-      toast.success(`Order #${order?.orderId} sent to courier successfully!`);
-      setIsSending(false);
-    }, 1500);
+    if (!order?._id) {
+      toast.error("Order not found");
+      return;
+    }
+
+    sendCourier(order._id, {
+      onSuccess: (res) => {
+        toast.success(res.message || "Parcel created successfully");
+        setOpen(false);
+      },
+
+      onError: (error: any) => {
+        toast.error(error?.response?.data?.message || "Failed to send parcel");
+      },
+    });
   };
 
   return (
     <div>
-      <Sheet>
+      <Sheet open={open} onOpenChange={setOpen}>
         <SheetTrigger asChild>
           <button className="inline-flex items-center gap-1.5 bg-[#2B748A] hover:bg-[#236a7e] text-white px-3 py-1.5 rounded-lg text-xs font-medium transition-colors">
             <Truck size={14} />
@@ -75,7 +72,10 @@ const SendQuiriar = ({ order }: SendQuiriarProps) => {
                 </p>
               </div>
             </div>
-            <button className="p-1.5 hover:bg-gray-100 rounded-lg transition-colors bg-amber-800">
+            <button
+              onClick={() => setOpen(false)}
+              className="p-1.5 hover:bg-gray-100 rounded-lg transition-colors cursor-pointer"
+            >
               <X size={18} className="text-gray-500" />
             </button>
           </div>
@@ -302,12 +302,12 @@ const SendQuiriar = ({ order }: SendQuiriarProps) => {
                           r="10"
                           stroke="currentColor"
                           strokeWidth="4"
-                        ></circle>
+                        />
                         <path
                           className="opacity-75"
                           fill="currentColor"
                           d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
-                        ></path>
+                        />
                       </svg>
                       Sending...
                     </>

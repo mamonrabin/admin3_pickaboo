@@ -3,7 +3,7 @@
 
 import { format } from "date-fns";
 import { Printer,  X } from "lucide-react";
-import { useRef } from "react";
+import { useRef, useState } from "react";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import { TOrder } from "@/types";
 
@@ -56,9 +56,11 @@ const Invoice = ({ order }: InvoiceProps) => {
     return status ? colors[status] || "bg-gray-100 text-gray-800" : "bg-gray-100 text-gray-800";
   };
 
+    const [open, setOpen] = useState(false);
+
   return (
     <div>
-      <Sheet>
+      <Sheet open={open} onOpenChange={setOpen}>
         <SheetTrigger asChild>
           <button className="p-1.5 bg-gray-100 hover:bg-gray-200 text-gray-600 rounded-lg transition-colors" title="Invoice">
             <Printer size={16} />
@@ -87,7 +89,9 @@ const Invoice = ({ order }: InvoiceProps) => {
                 <Printer size={16} />
                 Print
               </button>
-              <button className="p-1.5 hover:bg-gray-100 rounded-lg transition-colors">
+              <button 
+              onClick={() => setOpen(false)}
+              className="p-1.5 hover:bg-gray-100 rounded-lg transition-colors">
                 <X size={18} className="text-gray-500" />
               </button>
             </div>
