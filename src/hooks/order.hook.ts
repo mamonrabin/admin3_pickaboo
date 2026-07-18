@@ -2,6 +2,7 @@ import {
   deleteOrder,
   getAllOrders,
   getOrders,
+  getTodayOrders,
   orderFilter,
   updateOrder,
 } from "@/services/order.api";
@@ -23,8 +24,32 @@ export const useAllOrders = ({
   dateFilter,
 }: orderFilter) => {
   return useQuery({
-    queryKey: ["orders", page, limit,paymentMethod,paymentStatus,status, dateFilter],
-    queryFn: () => getAllOrders({ page, limit,paymentMethod, paymentStatus,status, dateFilter }),
+    queryKey: [
+      "orders",
+      page,
+      limit,
+      paymentMethod,
+      paymentStatus,
+      status,
+      dateFilter,
+    ],
+    queryFn: () =>
+      getAllOrders({
+        page,
+        limit,
+        paymentMethod,
+        paymentStatus,
+        status,
+        dateFilter,
+      }),
+    placeholderData: (previousData) => previousData,
+  });
+};
+
+export const useTodayOrders = ({ page = 1, limit = 10 }: orderFilter) => {
+  return useQuery({
+    queryKey: ["orders", page, limit],
+    queryFn: () => getTodayOrders({ page, limit }),
     placeholderData: (previousData) => previousData,
   });
 };

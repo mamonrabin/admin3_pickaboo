@@ -134,13 +134,13 @@ export function getMenuList(pathname: string): TGroup[] {
           icon: Images,
           submenus: [],
         },
-        {
-          href: "/blogs",
-          label: "blogs",
-          active: pathname.includes("/blogs"),
-          icon: ScrollText,
-          submenus: [],
-        },
+        // {
+        //   href: "/blogs",
+        //   label: "blogs",
+        //   active: pathname.includes("/blogs"),
+        //   icon: ScrollText,
+        //   submenus: [],
+        // },
         {
           href: "/policy",
           label: "Policy",

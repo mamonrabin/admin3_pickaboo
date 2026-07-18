@@ -271,3 +271,54 @@ export type TOrder = {
   updatedAt?: string;
   discount?: string;
 };
+
+
+
+export type TOrderByCategory = {
+  categoryName: string;
+  totalOrders: number;
+  categoryId: string;
+};
+
+export type TOrderPerProduct = {
+  orderCount: number;
+  productId: string;
+  title: string;
+  slug: string;
+  thumbnailImage: string;
+  price: number;
+};
+
+export type TOrderChart = {
+  _id:string;
+  orders:number;
+  revenue:number
+}
+
+export type TOrderStats = {
+  totalOrder: number;
+  totalOrderByCategory: TOrderByCategory[];
+  orderPerProduct: TOrderPerProduct[];
+  orderToday: number;
+  orderLast3Days: number;
+  orderLast7Days: number;
+  orderLast30Days: number;
+  orderChart:TOrderChart[]
+};
+
+export type TUsersByRole = {
+  _id: string;
+  count: number;
+};
+
+
+export type TUserStats = {
+  totalUsers: number;
+  totalActiveUsers: number;
+  totalInActiveUsers: number;
+  totalBlockedUsers: number;
+  newUsersInLast7Days: number;
+  newUsersInLast30Days: number;
+  usersByRole: TUsersByRole[];
+};
+
