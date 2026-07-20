@@ -12,3 +12,7 @@ export const getUserStats = async () => {
   const { data } = await AxiosInstance.get("/stats/user");
   return data;
 };
+export const getProductsStats = async () => {
+  const { data } = await AxiosInstance.get("/stats/products");
+  return data;
+};

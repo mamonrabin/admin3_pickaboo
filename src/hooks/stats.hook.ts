@@ -1,4 +1,4 @@
-import { getDashboardStats, getOrderStats, getUserStats } from "@/services/stats.api";
+import { getDashboardStats, getOrderStats, getProductsStats, getUserStats } from "@/services/stats.api";
 import { useQuery } from "@tanstack/react-query";
 
 export const useAllDashboardStats = () => {
@@ -17,5 +17,11 @@ export const useAllUserStats = () => {
   return useQuery({
     queryKey: ["users"],
     queryFn: getUserStats,
+  });
+};
+export const useAllProductsStats = () => {
+  return useQuery({
+    queryKey: ["products"],
+    queryFn: getProductsStats,
   });
 };

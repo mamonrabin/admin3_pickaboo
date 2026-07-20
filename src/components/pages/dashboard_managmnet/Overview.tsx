@@ -2,7 +2,7 @@
 import { Calendar, Download } from "lucide-react";
 import React from "react";
 import DashboardStats from "./DashboardStats";
-import { useAllDashboardStats, useAllOrdersStats, useAllUserStats } from "@/hooks/stats.hook";
+import { useAllDashboardStats, useAllOrdersStats, useAllProductsStats, useAllUserStats } from "@/hooks/stats.hook";
 import OrderStats from "./OrderStats";
 import RevenueNCategory from "./RevenueNCategory";
 import StatusNStockAlert from "./StatusNStockAlert";
@@ -11,9 +11,11 @@ const Overview = () => {
     const {data:dashboardStats} = useAllDashboardStats()
     const {data:ordersStats} = useAllOrdersStats()
     const {data:userStats} = useAllUserStats()
+    const {data:productStats} = useAllProductsStats()
     const statsData = dashboardStats?.data
     const orderData = ordersStats?.data
     const userData = userStats?.data
+    const productData = productStats?.data
   return (
     <div>
       <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between mb-6">
@@ -44,7 +46,7 @@ const Overview = () => {
       <OrderStats orderData={orderData} userData={userData}/>
       <RevenueNCategory orderData={orderData}/>
 
-      <StatusNStockAlert userData={userData}/>
+      <StatusNStockAlert userData={userData} orderData={orderData} lowStockAlert={productData?.lowStockAlerts}/>
     </div>
   );
 };

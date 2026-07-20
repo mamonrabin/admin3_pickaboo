@@ -1,68 +1,25 @@
 "use client";
-import { TUserStats } from "@/types";
+import { TLowStockAlert, TOrderStats, TUserStats } from "@/types";
+import Link from "next/link";
 import React from "react";
 import { Tooltip, ResponsiveContainer, PieChart, Pie, Cell } from "recharts";
 
 // Order Status Data
-const orderStatuses = [
-  { status: "Delivered", count: 45, percentage: 45, color: "#10b981" },
-  { status: "Processing", count: 28, percentage: 28, color: "#3b82f6" },
-  { status: "Shipped", count: 15, percentage: 15, color: "#8b5cf6" },
-  { status: "Pending", count: 8, percentage: 8, color: "#f59e0b" },
-  { status: "Cancelled", count: 4, percentage: 4, color: "#ef4444" },
-];
 
 // Low Stock Alerts Data
-const lowStockItems = [
-  {
-    name: "Smart Watch",
-    stock: 5,
-    threshold: 10,
-    status: "Critical",
-    color: "red",
-  },
-  {
-    name: "Wireless Earbuds",
-    stock: 8,
-    threshold: 15,
-    status: "Low",
-    color: "yellow",
-  },
-  {
-    name: "USB-C Cable",
-    stock: 3,
-    threshold: 20,
-    status: "Critical",
-    color: "red",
-  },
-  {
-    name: "Phone Case",
-    stock: 12,
-    threshold: 15,
-    status: "Low",
-    color: "yellow",
-  },
-];
 
-// const userData = {
-//   totalUsers: 2456,
-//   totalActiveUsers: 2150,
-//   totalInActiveUsers: 306,
-//   totalBlockedUsers: 45,
-//   newUsersInLast7Days: 120,
-//   newUsersInLast30Days: 450,
-//   usersByRole: [
-//     { _id: "USER", count: 2356 },
-//     { _id: "ADMIN", count: 5 },
-//     { _id: "SELLER", count: 95 }
-//   ]
-// };
 
 interface StatusNStockAlertProps {
   userData: TUserStats;
+  orderData: TOrderStats;
+  lowStockAlert: TLowStockAlert[];
 }
 
-const StatusNStockAlert: React.FC<StatusNStockAlertProps> = ({ userData }) => {
+const StatusNStockAlert: React.FC<StatusNStockAlertProps> = ({
+  userData,
+  orderData,
+  lowStockAlert,
+}) => {
   const userStatusData = [
     {
       name: "Active Users",
@@ -80,6 +37,40 @@ const StatusNStockAlert: React.FC<StatusNStockAlertProps> = ({ userData }) => {
       color: "#ef4444",
     },
   ];
+
+  console.log("---lowStockAlert----", lowStockAlert);
+
+  // Order Status Data
+
+  const statusColors: Record<string, string> = {
+    DELIVERED: "#10b981",
+    PROCESSING: "#3b82f6",
+    SHIPPED: "#8b5cf6",
+    PENDING: "#f59e0b",
+    CONFIRMED: "#06b6d4",
+    CANCELLED: "#ef4444",
+    ON_HOLD: "#e11d48",
+    IN_REVIEW: "#6366f1",
+    RETURNED: "#f97316",
+  };
+
+  const totalOrders = orderData?.totalOrder || 0;
+
+  const orderStatuses =
+    orderData?.orderStatus
+      ?.filter((item) => item.orders > 0) // Don't show 0 orders
+      .map((item) => ({
+        status: item._id,
+        count: item.orders,
+        percentage:
+          totalOrders > 0
+            ? Number(((item.orders / totalOrders) * 100).toFixed(1))
+            : 0,
+        color: statusColors[item._id] || "#9ca3af",
+      })) || [];
+
+  const criticalCount =
+    lowStockAlert?.filter((item) => item.alertType === "CRITICAL").length || 0;
 
   return (
     <div className="grid grid-cols-1 lg:grid-cols-3 gap-3 mt-6">
@@ -110,7 +101,10 @@ const StatusNStockAlert: React.FC<StatusNStockAlertProps> = ({ userData }) => {
               </Pie>
 
               <Tooltip
-                formatter={(value: number) => [value.toLocaleString(), "Users"]}
+                formatter={(value: unknown) => [
+                  typeof value === "number" ? value.toLocaleString() : String(value ?? ""),
+                  "Users",
+                ]}
                 contentStyle={{
                   backgroundColor: "#fff",
                   border: "1px solid #e5e7eb",
@@ -148,8 +142,8 @@ const StatusNStockAlert: React.FC<StatusNStockAlertProps> = ({ userData }) => {
           </div>
         </div>
         <div className="space-y-3">
-          {orderStatuses.map((item, index) => (
-            <div key={index}>
+          {orderStatuses.map((item) => (
+            <div key={item.status}>
               <div className="flex items-center justify-between text-sm mb-1">
                 <div className="flex items-center gap-2">
                   <div
@@ -158,8 +152,10 @@ const StatusNStockAlert: React.FC<StatusNStockAlertProps> = ({ userData }) => {
                   />
                   <span className="text-gray-600">{item.status}</span>
                 </div>
+
                 <span className="font-medium text-gray-900">{item.count}</span>
               </div>
+
               <div className="w-full bg-gray-200 rounded-full h-2">
                 <div
                   className="h-2 rounded-full transition-all duration-500"
@@ -183,33 +179,47 @@ const StatusNStockAlert: React.FC<StatusNStockAlertProps> = ({ userData }) => {
             </h3>
             <p className="text-xs text-gray-400">Items needing restock</p>
           </div>
-          <span className="bg-red-100 text-red-600 text-xs font-medium px-2 py-1 rounded-full">
-            2 Critical
+
+         <Link href="/stock_alerts">
+          <span className="bg-gray-200 hover:bg-[#155DFC] hover:text-white duration-300 cursor-pointer text-gray-600 text-xs font-medium px-2 py-1 rounded-full">
+            view more
           </span>
+         </Link>
         </div>
+
         <div className="space-y-3">
-          {lowStockItems.map((item, index) => (
-            <div
-              key={index}
-              className="flex items-center justify-between p-2 hover:bg-gray-50 rounded-lg transition-colors"
-            >
-              <div>
-                <p className="text-sm font-medium text-gray-800">{item.name}</p>
-                <p className="text-xs text-gray-400">
-                  Stock: {item.stock} / {item.threshold}
-                </p>
-              </div>
-              <span
-                className={`text-xs font-medium px-2 py-1 rounded-full ${
-                  item.color === "red"
-                    ? "bg-red-100 text-red-600"
-                    : "bg-yellow-100 text-yellow-600"
-                }`}
+          {lowStockAlert?.length ? (
+            lowStockAlert?.slice(0,5).map((item: TLowStockAlert) => (
+              <div
+                key={item._id}
+                className="flex items-center justify-between p-2 hover:bg-gray-50 rounded-lg transition-colors"
               >
-                {item.status}
-              </span>
+                <div>
+                  <p className="text-sm font-medium text-gray-800">
+                    {item.title}
+                  </p>
+
+                  <p className="text-xs text-gray-400">
+                    Available: {item.availableQuantity} / {item.quantity}
+                  </p>
+                </div>
+
+                <span
+                  className={`text-xs font-medium px-2 py-1 rounded-full ${
+                    item.alertType === "CRITICAL"
+                      ? "bg-red-100 text-red-600"
+                      : "bg-yellow-100 text-yellow-600"
+                  }`}
+                >
+                  {item.alertType}
+                </span>
+              </div>
+            ))
+          ) : (
+            <div className="py-8 text-center text-sm text-gray-500">
+              No low stock alerts 🎉
             </div>
-          ))}
+          )}
         </div>
       </div>
     </div>

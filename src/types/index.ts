@@ -1,3 +1,5 @@
+import { JSX } from "react/jsx-runtime";
+
 /* eslint-disable @typescript-eslint/no-explicit-any */
 export type TSubmenu = {
   href: string;
@@ -54,8 +56,8 @@ export type TInventory = {
   colorName?: string;
   size?: string;
   quantity: number;
-  soldQuantity?:string
-  holdQuantity?:string
+  soldQuantity?: string;
+  holdQuantity?: string;
 };
 
 export type TSpecification = {
@@ -159,32 +161,31 @@ export type TBanner = {
 };
 
 export type TPolicy = {
-   _id: string;
+  _id: string;
   title: string;
   description: string;
   type: string;
 };
 export type TAbout = {
-   _id: string;
+  _id: string;
   description: string;
   type: string;
 };
 export type TContact = {
-   _id: string;
+  _id: string;
   name: string;
   email: string;
   phone: string;
   message: string;
 };
 export type TSocial = {
-   _id: string;
+  _id: string;
   link: string;
   type: string;
-
 };
 
 export type TLogo = {
-   _id: string;
+  _id: string;
   headerLogo: string;
   footerLogo: string;
   description: string;
@@ -195,15 +196,13 @@ export type TLogo = {
   type: string;
 };
 export type TReview = {
-   _id: string;
+  _id: string;
   userID: TUser;
   productID: TProduct;
   rating: number;
   comment: string;
   type: string;
 };
-
-
 
 export type TOrderProduct = {
   productRef: TProduct;
@@ -229,16 +228,16 @@ export type TDeliveryInfo = {
 };
 
 export type TShippingAddress = {
-  name?:string;
-  email?:string;
-  phone?:string;
-  address?:string;
-  house?:string;
-  road?:string;
-  thana?:string;
-  altPhone?:string;
-  city?:string;
-}
+  name?: string;
+  email?: string;
+  phone?: string;
+  address?: string;
+  house?: string;
+  road?: string;
+  thana?: string;
+  altPhone?: string;
+  city?: string;
+};
 
 export type TOrder = {
   _id: string;
@@ -251,7 +250,7 @@ export type TOrder = {
   shippingCost: number;
   totalPrice: number;
   couponRef?: TCoupon;
-  shippingAddress:TShippingAddress;
+  shippingAddress: TShippingAddress;
   payment: TPaymentInfo;
   paymentMethod?: string;
   name: string;
@@ -272,8 +271,6 @@ export type TOrder = {
   discount?: string;
 };
 
-
-
 export type TOrderByCategory = {
   categoryName: string;
   totalOrders: number;
@@ -290,10 +287,15 @@ export type TOrderPerProduct = {
 };
 
 export type TOrderChart = {
-  _id:string;
-  orders:number;
-  revenue:number
-}
+  _id: string;
+  orders: number;
+  revenue: number;
+};
+
+export type TOrderStatus = {
+  _id: string;
+  orders: number;
+};
 
 export type TOrderStats = {
   totalOrder: number;
@@ -303,14 +305,14 @@ export type TOrderStats = {
   orderLast3Days: number;
   orderLast7Days: number;
   orderLast30Days: number;
-  orderChart:TOrderChart[]
+  orderChart: TOrderChart[];
+  orderStatus: TOrderStatus[];
 };
 
 export type TUsersByRole = {
   _id: string;
   count: number;
 };
-
 
 export type TUserStats = {
   totalUsers: number;
@@ -322,3 +324,13 @@ export type TUserStats = {
   usersByRole: TUsersByRole[];
 };
 
+export type TLowStockAlert = {
+  [x: string]: any;
+  length: any;
+  _id: string;
+  title: string;
+  soldQuantity: number;
+  quantity: number;
+  availableQuantity: number;
+  alertType: "LOW" | "CRITICAL";
+};
