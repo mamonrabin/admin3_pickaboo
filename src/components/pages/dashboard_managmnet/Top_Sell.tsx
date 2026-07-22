@@ -1,0 +1,139 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
+"use client";
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table";
+
+import { FolderOpen } from "lucide-react";
+
+import { TLowStockAlert } from "@/types";
+import TableSkeleton from "@/reuseble_components/TableSkeleton";
+import { useAllProductsStats } from "@/hooks/stats.hook";
+
+const tableHeaders = [
+  "SL",
+  "product",
+  "sold",
+  "Orders",
+  "Revenue",
+];
+
+const TopSell = () => {
+  const { data: productList, isLoading } = useAllProductsStats();
+
+  const products = productList?.data?.totalHighestOrderProduct;
+
+  console.log("products", products);
+
+  return (
+    <div className="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
+      {/* Header */}
+      <div className="flex items-center justify-between p-6 border-b border-gray-200">
+        <div className="flex items-center gap-3">
+          <div className="bg-blue-50 p-2.5 rounded-lg">
+            <FolderOpen size={20} className="text-blue-600" />
+          </div>
+          <div>
+            <h2 className="text-xl font-bold text-gray-900">
+              Top Sell Products
+            </h2>
+            <p className="text-sm text-gray-500">
+              Total{" "}
+              <span className="font-semibold text-gray-700">
+                {products?.length}
+              </span>{" "}
+              products
+            </p>
+          </div>
+        </div>
+      </div>
+
+      {/* Table Container */}
+      <div className="overflow-x-auto">
+        <Table>
+          <TableHeader className="bg-gray-50">
+            <TableRow className="hover:bg-transparent border-b border-gray-200">
+              {tableHeaders.map((header) => (
+                <TableHead
+                  key={header}
+                  className="text-xs font-semibold text-gray-600 uppercase tracking-wider py-3 px-4"
+                >
+                  {header}
+                </TableHead>
+              ))}
+            </TableRow>
+          </TableHeader>
+
+          {isLoading ? (
+            <TableSkeleton rows={5} />
+          ) : (
+            <TableBody>
+              {products?.length ? (
+                products.map((product: TLowStockAlert, index: number) => (
+                  <TableRow
+                    key={product._id}
+                    className="hover:bg-gray-50/50 transition-colors border-b border-gray-100"
+                  >
+                    <TableCell className="py-3 px-4 text-sm text-gray-500 font-medium text-center">
+                      {index + 1}
+                    </TableCell>
+
+                    <TableCell className="py-3 px-4">
+                      <span className="text-sm font-semibold text-gray-900 capitalize">
+                        {product.name || "N/A"}
+                      </span>
+                    </TableCell>
+
+                    <TableCell className="py-3 px-4">
+                      <span className="text-sm text-gray-700 capitalize">
+                        {product.totalSold || "N/A"}
+                      </span>
+                    </TableCell>
+                    <TableCell className="py-3 px-4">
+                      <span className="text-sm text-gray-700 capitalize">
+                        {product.totalOrders || "N/A"}
+                      </span>
+                    </TableCell>
+                    <TableCell className="py-3 px-4">
+                      <span className="text-sm text-gray-700 capitalize">
+                        {product.revenue || 0}
+                      </span>
+                    </TableCell>
+
+                    
+                  </TableRow>
+                ))
+              ) : (
+                <TableRow>
+                  <TableCell
+                    colSpan={tableHeaders.length}
+                    className="text-center py-16 text-gray-500"
+                  >
+                    <div className="flex flex-col items-center gap-3">
+                      <div className="w-16 h-16 bg-gray-100 rounded-full flex items-center justify-center">
+                        <FolderOpen size={32} className="text-gray-300" />
+                      </div>
+                      <p className="text-lg font-medium text-gray-700">
+                        No order found
+                      </p>
+                      <p className="text-sm text-gray-400">
+                        Start by adding user first product
+                      </p>
+                    </div>
+                  </TableCell>
+                </TableRow>
+              )}
+            </TableBody>
+          )}
+        </Table>
+      </div>
+    </div>
+  );
+};
+
+export default TopSell;

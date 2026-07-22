@@ -183,6 +183,13 @@ export function getMenuList(pathname: string): TGroup[] {
           icon: Star,
           submenus: [],
         },
+        {
+          href: "/List Page",
+          label: "Home Page Control",
+          active: pathname.includes("/List Page"),
+          icon: Star,
+          submenus: [],
+        },
       ],
     },
   ];

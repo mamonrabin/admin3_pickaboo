@@ -1,13 +1,27 @@
 "use client"
 import { Calendar, Download } from "lucide-react";
-import React from "react";
+import React, { useState } from "react";
 import DashboardStats from "./DashboardStats";
 import { useAllDashboardStats, useAllOrdersStats, useAllProductsStats, useAllUserStats } from "@/hooks/stats.hook";
 import OrderStats from "./OrderStats";
 import RevenueNCategory from "./RevenueNCategory";
 import StatusNStockAlert from "./StatusNStockAlert";
+import SatisfactionNLocation from "./SatisfactionNLocation";
+import { useAllReviews } from "@/hooks/review.hook";
+import TopSellingProducts from "./TopSellingProducts";
 
 const Overview = () => {
+
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  const [page, setPage] = useState(1);
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    const [limit, setLimit] = useState(5);
+  
+    const { data: reviewList} = useAllReviews(page, limit);
+    
+    const reviews = reviewList?.data;
+
+
     const {data:dashboardStats} = useAllDashboardStats()
     const {data:ordersStats} = useAllOrdersStats()
     const {data:userStats} = useAllUserStats()
@@ -47,6 +61,8 @@ const Overview = () => {
       <RevenueNCategory orderData={orderData}/>
 
       <StatusNStockAlert userData={userData} orderData={orderData} lowStockAlert={productData?.lowStockAlerts}/>
+      <SatisfactionNLocation reviews={reviews} cityStats={orderData?.cityStats} returnStats={orderData?.returnStats}/>
+      <TopSellingProducts productData={productData}/>
     </div>
   );
 };

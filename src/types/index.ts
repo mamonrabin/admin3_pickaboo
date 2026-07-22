@@ -1,4 +1,4 @@
-import { JSX } from "react/jsx-runtime";
+
 
 /* eslint-disable @typescript-eslint/no-explicit-any */
 export type TSubmenu = {
@@ -196,6 +196,7 @@ export type TLogo = {
   type: string;
 };
 export type TReview = {
+  [x: string]: any;
   _id: string;
   userID: TUser;
   productID: TProduct;
@@ -297,6 +298,26 @@ export type TOrderStatus = {
   orders: number;
 };
 
+export type TCityStats = {
+  [x: string]: any;
+  totalOrders: number;
+  totalRevenue: number;
+  totalProductsSold: number;
+  city: string;
+  averageOrderValue: number;
+};
+
+export type TReasonsStats = {
+  reason: string;
+  count: number;
+  percentage: number;
+};
+
+export type TReturnStats = {
+  totalReturns: number;
+  reasons: TReasonsStats[];
+};
+
 export type TOrderStats = {
   totalOrder: number;
   totalOrderByCategory: TOrderByCategory[];
@@ -307,6 +328,8 @@ export type TOrderStats = {
   orderLast30Days: number;
   orderChart: TOrderChart[];
   orderStatus: TOrderStatus[];
+  cityStats: TCityStats[];
+  returnStats: TReturnStats[];
 };
 
 export type TUsersByRole = {
@@ -333,4 +356,27 @@ export type TLowStockAlert = {
   quantity: number;
   availableQuantity: number;
   alertType: "LOW" | "CRITICAL";
+};
+export type TTotalHighestOrderProduct = {
+  
+  totalSold: number;
+  totalOrders: number;
+  revenue: number;
+  productId: string;
+  name: string;
+  slug: string;
+};
+export type TInventoryValueStats = {
+  
+  totalProducts: number;
+  totalStock: number;
+  totalMRPValue: number;
+  totalSellingValue: number;
+  totalDiscountValue: number;
+};
+
+export type TProductStats = {
+  lowStockAlerts: TLowStockAlert[];
+  totalHighestOrderProduct:TTotalHighestOrderProduct[]
+  inventoryValueStats:TInventoryValueStats[]
 };
