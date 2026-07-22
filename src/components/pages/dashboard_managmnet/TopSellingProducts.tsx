@@ -18,7 +18,7 @@ const StatsCard = ({
     <div className="flex items-start justify-between">
       <div>
         <p className="text-sm text-gray-500 font-medium">{title}</p>
-        <p className="text-lg font-bold text-gray-900 mt-1">{value}</p>
+        <p className="text-base font-bold text-gray-900 mt-1">{value}</p>
       </div>
       <div className={`${color} p-1.5 rounded-lg`}>
         <Icon size={12} className="text-white" />
@@ -75,7 +75,7 @@ const TopSellingProducts: React.FC<productDataProps> = ({ productData }) => {
               </tr>
             </thead>
             <tbody className="divide-y divide-gray-100">
-              {highestOrderProduct?.slice(0,5).map((p, i) => (
+              {highestOrderProduct?.slice(0, 5).map((p, i) => (
                 <tr key={i} className="hover:bg-gray-50/50 transition-colors">
                   <td className="px-4 py-3 text-sm font-medium text-gray-500">
                     {i + 1}
@@ -108,14 +108,14 @@ const TopSellingProducts: React.FC<productDataProps> = ({ productData }) => {
         <div className="grid grid-cols-2 gap-2">
           <StatsCard
             title="Total Products"
-            value={inventoryValueStats?.[0]?.totalProducts}
+            value={inventoryValueStats?.[0]?.totalProducts || 0}
             isPositive
             icon={Package}
             color="bg-purple-500"
           />
           <StatsCard
             title="total Stock"
-            value={inventoryValueStats?.[0]?.totalStock}
+            value={inventoryValueStats?.[0]?.totalStock || 0}
             isPositive
             icon={PieChartIcon}
             color="bg-green-500"
@@ -124,14 +124,14 @@ const TopSellingProducts: React.FC<productDataProps> = ({ productData }) => {
         <div className="grid grid-cols-2 gap-2">
           <StatsCard
             title="MRP Value"
-            value={inventoryValueStats?.[0]?.totalMRPValue}
+            value={formatCurrency(inventoryValueStats?.[0]?.totalMRPValue || 0)}
             isPositive
             icon={DollarSign}
             color="bg-orange-500"
           />
           <StatsCard
             title="Selling Value"
-            value={inventoryValueStats?.[0]?.totalSellingValue}
+            value={formatCurrency(inventoryValueStats?.[0]?.totalSellingValue || 0)}
             isPositive
             icon={DollarSign}
             color="bg-[#3B82F6]"
@@ -139,8 +139,7 @@ const TopSellingProducts: React.FC<productDataProps> = ({ productData }) => {
         </div>
         <StatsCard
           title="Discount Value"
-          value={inventoryValueStats?.[0]?.totalDiscountValue}
-          change="+5.8%"
+          value={formatCurrency(inventoryValueStats?.[0]?.totalDiscountValue || 0)}
           isPositive
           icon={DollarSign}
           color="bg-[#06B6D4]"

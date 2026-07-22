@@ -9,6 +9,8 @@ import StatusNStockAlert from "./StatusNStockAlert";
 import SatisfactionNLocation from "./SatisfactionNLocation";
 import { useAllReviews } from "@/hooks/review.hook";
 import TopSellingProducts from "./TopSellingProducts";
+import RecenteOrder from "./RecenteOrder";
+import { useAllOrders } from "@/hooks/order.hook";
 
 const Overview = () => {
 
@@ -21,6 +23,17 @@ const Overview = () => {
     
     const reviews = reviewList?.data;
 
+    
+    //   const [paymentMethod, setPaymentMethod] = useState<string>();
+    //   const [paymentStatus, setPaymentStatus] = useState<string>();
+    //   const [status, setStatus] = useState<string>();
+    //   const [dateFilter, setDateFilter] = useState<string>();
+    
+      const { data: orderList } = useAllOrders({
+        page,
+        limit,
+      });
+      const orders = orderList?.data?.data;
 
     const {data:dashboardStats} = useAllDashboardStats()
     const {data:ordersStats} = useAllOrdersStats()
@@ -63,6 +76,7 @@ const Overview = () => {
       <StatusNStockAlert userData={userData} orderData={orderData} lowStockAlert={productData?.lowStockAlerts}/>
       <SatisfactionNLocation reviews={reviews} cityStats={orderData?.cityStats} returnStats={orderData?.returnStats}/>
       <TopSellingProducts productData={productData}/>
+      <RecenteOrder orders={orders}/>
     </div>
   );
 };
