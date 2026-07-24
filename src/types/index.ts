@@ -380,3 +380,14 @@ export type TProductStats = {
   totalHighestOrderProduct:TTotalHighestOrderProduct[]
   inventoryValueStats:TInventoryValueStats[]
 };
+
+
+export type THomeControll = {
+  _id: string;
+  title: string;
+  landing: string;
+  order: string;
+  enabled: string;
+ 
+};
+

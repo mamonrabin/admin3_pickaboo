@@ -18,16 +18,20 @@ export default function AdminPanelLayout({
 
   return (
     <>
+    
       <Sidebar />
+      
       <main
         className={cn(
           "min-h-screen bg-[#F4F4F5] dark:bg-zinc-900 transition-all duration-300 px-6",
-          isOpen ? "lg:ml-64" : "ml-16",
+          isOpen ? "lg:ml-64" : "md:ml-16",
         )}
       >
-        <Header />
+        
         <QueryClientProvider client={queryClient}>
+        
            <Toaster richColors position="top-right" />
+             <Header />
           {children}
         </QueryClientProvider>
       </main>

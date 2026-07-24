@@ -1,14 +1,22 @@
 import { TGroup } from "@/types";
 import {
   LayoutGrid,
-  ScrollText,
   ShoppingCart,
-  Shapes,
-  Package2,
   TicketPercent,
-  FlameKindling,
   Images,
   Star,
+  Users,
+  FileText,
+  Info,
+  Phone,
+  Share2,
+  Image,
+  ClipboardList,
+  Layout,
+  FolderTree,
+  Badge,
+  Sparkles,
+  Package,
 } from "lucide-react";
 
 export function getMenuList(pathname: string): TGroup[] {
@@ -34,7 +42,7 @@ export function getMenuList(pathname: string): TGroup[] {
           href: "/order-list",
           label: "Orders",
           active: pathname.includes("/order-list"),
-          icon: ShoppingCart,
+          icon: ClipboardList,
           submenus: [],
         },
       ],
@@ -42,12 +50,11 @@ export function getMenuList(pathname: string): TGroup[] {
     {
       groupLabel: "Management",
       menus: [
-       
         {
           href: "/category",
           label: "Category",
           active: pathname.includes("/category"),
-          icon: Shapes,
+          icon: FolderTree,
           submenus: [
             {
               href: "/category/category",
@@ -61,37 +68,18 @@ export function getMenuList(pathname: string): TGroup[] {
             },
           ],
         },
-        // {
-        //   href: "/Size&Color",
-        //   label: "Size & Color",
-        //   active: pathname.includes("/Size&Color"),
-        //   icon: Shapes,
-        //   submenus: [
-        //     {
-        //       href: "/Size&Color/size",
-        //       label: "Size",
-        //       active: pathname === "/Size&Color/size",
-        //     },
-        //     {
-        //       href: "/Size&Color/color",
-        //       label: "Color",
-        //       active: pathname === "/Size&Color/color",
-        //     },
-        //   ],
-        // },
-
         {
           href: "/brand",
           label: "Brand",
           active: pathname.includes("/brand"),
-          icon: Package2,
+          icon: Badge,
           submenus: [],
         },
         {
           href: "/products",
           label: "Products",
           active: pathname.includes("/products"),
-          icon: Package2,
+          icon: Package,
           submenus: [],
         },
         {
@@ -105,23 +93,16 @@ export function getMenuList(pathname: string): TGroup[] {
           href: "/campaign",
           label: "Campaign",
           active: pathname.includes("/campaign"),
-          icon: FlameKindling,
+          icon: Sparkles,
           submenus: [],
         },
         {
           href: "/user",
           label: "Customer",
           active: pathname.includes("/user"),
-          icon: FlameKindling,
+          icon: Users,
           submenus: [],
         },
-        // {
-        //   href: "/payment",
-        //   label: "Payment",
-        //   active: pathname.includes("/payment"),
-        //   icon: FlameKindling,
-        //   submenus: [],
-        // },
       ],
     },
     {
@@ -134,46 +115,39 @@ export function getMenuList(pathname: string): TGroup[] {
           icon: Images,
           submenus: [],
         },
-        // {
-        //   href: "/blogs",
-        //   label: "blogs",
-        //   active: pathname.includes("/blogs"),
-        //   icon: ScrollText,
-        //   submenus: [],
-        // },
         {
           href: "/policy",
           label: "Policy",
           active: pathname.includes("/policy"),
-          icon: ScrollText,
+          icon: FileText,
           submenus: [],
         },
         {
           href: "/about",
           label: "About",
           active: pathname.includes("/about"),
-          icon: ScrollText,
+          icon: Info,
           submenus: [],
         },
         {
           href: "/contact",
           label: "Contact",
           active: pathname.includes("/contact"),
-          icon: ScrollText,
+          icon: Phone,
           submenus: [],
         },
         {
           href: "/social",
           label: "Social",
           active: pathname.includes("/social"),
-          icon: ScrollText,
+          icon: Share2,
           submenus: [],
         },
         {
           href: "/logo",
           label: "Set Logo",
           active: pathname.includes("/logo"),
-          icon: ScrollText,
+          icon: Image,
           submenus: [],
         },
         {
@@ -184,10 +158,10 @@ export function getMenuList(pathname: string): TGroup[] {
           submenus: [],
         },
         {
-          href: "/List Page",
+          href: "/home_controll",
           label: "Home Page Control",
-          active: pathname.includes("/List Page"),
-          icon: Star,
+          active: pathname.includes("/home_controll"),
+          icon: Layout,
           submenus: [],
         },
       ],
